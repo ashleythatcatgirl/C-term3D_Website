@@ -12,6 +12,17 @@ This website is (going to be) an implementation of my C rendering program for 3D
 
 Currently has a feature for listing through all availible items (models, textures, hdri's) from the api, searching, filtering by type and category, a local storage for favorited items, and a session storage for downloaded items
 
+## Bugs and issues (oh so many)
+
+- For some reason (im pretty sure its a confusion between 0 and null), the 0th model cannot be favorited
+- The loading takes too long and some api fetches are not necessary
+- The code is a huge mess and i have to rewrite it
+- A lot of things are still missing (for example the info page that i just forgot about)
+- The design is booring, and extremely meh
+- The program implementation is well.. non existant
+- There are a few details missing for models in terms of info
+- The page isnt exactly the most mobile friendly
+- Others for sure
 
 ### Frontend
 

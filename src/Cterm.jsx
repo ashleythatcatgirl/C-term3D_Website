@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+const placeholderImg = "/ctermplaceholder.png"
 const API_URL = "https://api.polyhaven.com";
 
 export default function Cterm() {
@@ -108,6 +109,8 @@ export default function Cterm() {
 		}
 
 		setFilterType(type);
+		setFilterCategory(null);
+		console.log('hi');
 		handleGetCategories(type);
 	};
 
@@ -122,7 +125,7 @@ export default function Cterm() {
 
 	const handleGetLocalStorage = () => {
 		const savedFavorites = localStorage.getItem('favoriteModels');
-		if (!favoriteModels) return;
+		if (!savedFavorites) return;
 
 		const temp = savedFavorites.split(',');
 		const temp2 = temp.map((t) => t = parseInt(t));
@@ -176,7 +179,7 @@ export default function Cterm() {
 							</p>
 							<img
 								className="mx-auto "
-								src="../src/assets/ctermplaceholder.png"
+								src={placeholderImg}
 							/>
 						</div>
 					</div>
@@ -233,12 +236,15 @@ export default function Cterm() {
 								<select
 									className="w-full p-2 bg-(--color-1) border-1 border-(--color3) rounded-lg"
                                 					onChange={(e) => handleFilterCategory(e.target.value)}
+									disabled={filterType ? false : true}
 								>
-									<option>all</option>
-									{!categories} && 
-									{categories.map((category, index) => 
-										   <option key={index}>{category}</option>
+									{!filterType && (
+										<option>Select a type first</option>
 									)}
+									{categories && (
+									categories.map((category, index) => 
+										   <option key={index}>{category}</option>
+									))}
 								</select>
 							</div>
 						</div>
@@ -415,7 +421,7 @@ function ModelDetails({models, index, onClose, onFavorite, onDownload}) {
 					<div className="pb-2 pt-5 border-b">
 						<h2 className="font-bold text-lg pb-2">Date published</h2>
 						<div className="flex">
-							<p>{Date(model.date_published * 1000)}</p>
+							<p>{Date(model.date_published * 1000).replace(/\(.*\)/g, "")}</p>
 						</div>
 					</div>
 					<div className="pb-2 pt-5 border-b">
