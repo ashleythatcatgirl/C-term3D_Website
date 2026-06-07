@@ -7,9 +7,12 @@ A website implementation of my C program [C-term3D](https://github.com/ashleytha
 ## Overview
 
 This website is (going to be) an implementation of my C rendering program for 3D scenes and models, with the api from [Poly Haven](https://polyhaven.com) for downloading the models, and viewing them in your browser
+The main reason point, is for it to make 3D modeling more accesible
+I will definitely be working on this for a while longer, since i wanna improve my C program and also definitely this website
 
 ## Details
 
+The design is pretty simple, just a header, a viewport for the program with a list of imported models on the side, and under all that a search/filter grid of all the available models, textures, etc.
 Currently has a feature for listing through all availible items (models, textures, hdri's) from the api, searching, filtering by type and category, a local storage for favorited items, and a session storage for downloaded items
 
 ## Bugs and issues (oh so many)
@@ -32,8 +35,8 @@ The main part is a viewport of the C program with basic controls for camera and 
 ### Backend
 
 #### Api (Poly Haven)
-- Search field and filtering based on metadata
-- Saving favorite models
-- Downloading models (not implemented kinda)
+Search field and filtering based on metadata
+Saving favorite models
+Downloading models (not implemented kinda)
 
 
