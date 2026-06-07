@@ -26,7 +26,10 @@ export default function Cterm() {
 		handleGetTypes();
 	}, []);
     	useEffect(() => {
-		handleGetStorage();
+		handleGetLocalStorage();
+	}, []);
+    	useEffect(() => {
+		handleGetSessionStorage();
 	}, []);
 
 	const handleGetModels = async () => {
@@ -82,7 +85,7 @@ export default function Cterm() {
 		}
 
 		setFavoriteModels(newFavorites);
-		localStorage.setItem('favoriteModels', favoriteModels);
+		localStorage.setItem('favoriteModels', newFavorites);
 	};
 
 	const handleDownloadModel = (index) => {
@@ -93,6 +96,7 @@ export default function Cterm() {
 		const newDownloads = [...downloadedModels, models[index]];
 
 		setDownloadedModels(newDownloads);
+		sessionStorage.setItem('downloadedModels', JSON.stringify(newDownloads));
 	};
 
 	const handleFilterType = (type) => {
@@ -116,7 +120,7 @@ export default function Cterm() {
 		setFilterCategory(category);
 	};
 
-	const handleGetStorage = () => {
+	const handleGetLocalStorage = () => {
 		const savedFavorites = localStorage.getItem('favoriteModels');
 		if (!favoriteModels) return;
 
@@ -124,6 +128,12 @@ export default function Cterm() {
 		const temp2 = temp.map((t) => t = parseInt(t));
 
 		setFavoriteModels(temp2);
+	};
+	const handleGetSessionStorage = () => {
+		const savedDownloads = sessionStorage.getItem('downloadedModels');
+		if (!savedDownloads) return;
+
+		setDownloadedModels(JSON.parse(savedDownloads));
 	};
 
 	const normalizedSearch = search
