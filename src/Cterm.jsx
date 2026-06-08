@@ -81,7 +81,6 @@ export default function Cterm() {
 
 	const handleDownloadAsset = (index) => {
 		if (downloadedAssets.find((dAsset) => dAsset == assets[index]) != null) {
-			console.log('hi');
 			toast.info("Redownloading asset");
 		} else {
 			toast.info("Downloading new asset");
@@ -94,16 +93,15 @@ export default function Cterm() {
 	};
 
 	const handleFilterType = (type) => {
+		setFilterCategory(null);
+
 		if (type == 'all') {
 			setFilterType(null);
-			setFilterCategory(null);
 			setCategories([]);
 			return;
 		}
 
 		setFilterType(type);
-		setFilterCategory(null);
-		console.log('hi');
 		handleGetCategories(type);
 	};
 
@@ -216,11 +214,12 @@ export default function Cterm() {
 								<h2 className="font-bold text-xl">Type</h2>
 								<select
 									className="w-full p-2 bg-(--color-1) border-1 border-(--color3) rounded-lg"
+									value={filterType ? filterType : 'all'}
                                 					onChange={(e) => handleFilterType(e.target.value)}
 								>
-									<option>all</option>
+									<option value='all'>all</option>
 									{types.map((type, index) => 
-										   <option key={index}>{type}</option>
+										   <option key={index} value={type}>{type}</option>
 									)}
 								</select>
 							</div>
@@ -228,15 +227,16 @@ export default function Cterm() {
 								<h2 className="font-bold text-xl">Category</h2>
 								<select
 									className="w-full p-2 bg-(--color-1) border-1 border-(--color3) rounded-lg"
+									value={filterCategory ? filterCategory : 'all'}
                                 					onChange={(e) => handleFilterCategory(e.target.value)}
 									disabled={filterType ? false : true}
 								>
 									{!filterType && (
-										<option>Select a type first</option>
+										<option value='all'>Select a type first</option>
 									)}
 									{categories && (
 									categories.map((category, index) => 
-										   <option key={index}>{category}</option>
+										   <option key={index} value={category}>{category}</option>
 									))}
 								</select>
 							</div>
@@ -320,7 +320,13 @@ function AssetList(
 	);
 }
 
-function Asset({asset, isSelected, isFavorited, index, onClick, onClose, onFavorite, onDownload}) {
+function Asset(
+	{
+		asset,
+		isSelected, isFavorited,
+		index,
+		onClick, onClose, onFavorite, onDownload
+	}) {
 
 	return (
 		(!isSelected
@@ -385,7 +391,7 @@ function Asset({asset, isSelected, isFavorited, index, onClick, onClose, onFavor
 					</button>
 				</div>
 			</div>
-			<div className="flex h-full">
+			<div className="flex">
 				<div className="flex flex-col border-r pr-8 max-w-[50%]">
 					<h1 className='font-bold text-3xl'>{asset.name}</h1>
 					<div className="relative w-[50%] lg:w-full">
