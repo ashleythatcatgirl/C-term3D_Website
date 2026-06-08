@@ -1,15 +1,18 @@
 
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useAssets } from "/hooks/useAssets.js";
+import { useTypes } from "/hooks/useTypes.js";
+import { toast } from "sonner";
 
 const placeholderImg = "/ctermplaceholder.png"
 const API_URL = "https://api.polyhaven.com";
 
 export default function Cterm() {
-	const [models, setModels] = useState([]);
-	const [favoriteModels, setFavoriteModels] = useState([]);
-	const [downloadedModels, setDownloadedModels] = useState([]);
+	const { assets, isLoadingAssets, refetchAssets } = useAssets(true);
 
+	const [favoriteAssets, setFavoriteAssets] = useState([]);
+	const [downloadedAssets, setDownloadedAssets] = useState([]);
 	const [types, setTypes] = useState([]);
 	const [categories, setCategories] = useState([]);
 
@@ -18,11 +21,8 @@ export default function Cterm() {
 
     	const [search, setSearch] = useState('');
 
-	const [selectedModel, setSelectedModel] = useState();
+	const [selectedAsset, setSelectedAsset] = useState();
 
-    	useEffect(() => {
-		handleGetModels();
-	}, []);
     	useEffect(() => {
 		handleGetTypes();
 	}, []);
@@ -33,19 +33,8 @@ export default function Cterm() {
 		handleGetSessionStorage();
 	}, []);
 
-	const handleGetModels = async () => {
-		const endpoint = '/assets';
-
-		const response = await fetch(`${API_URL}${endpoint}`);
-		const data = await response.json();
-
-		const models = Object.values(data);
-
-		setModels(models);
-	};
-
 	const handleGetTypes = async () => {
-		const endpoint = '/types';
+		const endpoint = `/types`;
 
 		const response = await fetch(`${API_URL}${endpoint}`);
 		const data = await response.json();
@@ -64,40 +53,44 @@ export default function Cterm() {
 		setCategories(categories);
 	};
 
-	const handleModelSelect = (index) => {
-		if (index == selectedModel) {
-			setSelectedModel(null);
+	const handleAssetSelect = (index) => {
+		if (index == selectedAsset) {
+			setSelectedAsset(null);
 			return;
 		}
-		setSelectedModel(index);
+		setSelectedAsset(index);
 	};
 
 	const handleCloseMenu = () => {
-		setSelectedModel(null);
+		setSelectedAsset(null);
 	};
 
-	const handleFavoriteModel = (index) => {
+	const handleFavoriteAsset = (index) => {
 		let newFavorites = [];
-		//TODO: FIX
-		if (favoriteModels.find((fModel) => fModel == index)) {
-			newFavorites = favoriteModels.filter((fModel) => fModel != index);
+		if (favoriteAssets.find((fAsset) => fAsset === index) != null) {
+			newFavorites = favoriteAssets.filter((fAsset) => fAsset != index);
+			toast.info("Removed from favorites");
 		} else {
-			newFavorites = [...favoriteModels, index];
+			newFavorites = [...favoriteAssets, index];
+			toast.info("Added to favorites");
 		}
 
-		setFavoriteModels(newFavorites);
-		localStorage.setItem('favoriteModels', newFavorites);
+		setFavoriteAssets(newFavorites);
+		localStorage.setItem('favoriteAssets', newFavorites);
 	};
 
-	const handleDownloadModel = (index) => {
-		if (downloadedModels.find((dModel) => dModel == index)) {
-			alert('Redownloading model');
+	const handleDownloadAsset = (index) => {
+		if (downloadedAssets.find((dAsset) => dAsset == assets[index]) != null) {
+			console.log('hi');
+			toast.info("Redownloading asset");
+		} else {
+			toast.info("Downloading new asset");
 		}
 
-		const newDownloads = [...downloadedModels, models[index]];
+		const newDownloads = [...downloadedAssets, assets[index]];
 
-		setDownloadedModels(newDownloads);
-		sessionStorage.setItem('downloadedModels', JSON.stringify(newDownloads));
+		setDownloadedAssets(newDownloads);
+		sessionStorage.setItem('downloadedAssets', JSON.stringify(newDownloads));
 	};
 
 	const handleFilterType = (type) => {
@@ -124,19 +117,19 @@ export default function Cterm() {
 	};
 
 	const handleGetLocalStorage = () => {
-		const savedFavorites = localStorage.getItem('favoriteModels');
+		const savedFavorites = localStorage.getItem('favoriteAssets');
 		if (!savedFavorites) return;
 
 		const temp = savedFavorites.split(',');
 		const temp2 = temp.map((t) => t = parseInt(t));
 
-		setFavoriteModels(temp2);
+		setFavoriteAssets(temp2);
 	};
 	const handleGetSessionStorage = () => {
-		const savedDownloads = sessionStorage.getItem('downloadedModels');
+		const savedDownloads = sessionStorage.getItem('downloadedAssets');
 		if (!savedDownloads) return;
 
-		setDownloadedModels(JSON.parse(savedDownloads));
+		setDownloadedAssets(JSON.parse(savedDownloads));
 	};
 
 	const normalizedSearch = search
@@ -185,14 +178,14 @@ export default function Cterm() {
 					</div>
 					<div className="flex flex-col w-full">
 						<div className="px-2 py-4">
-							<h1 className='font-bold text-xl'>Downloaded models</h1>
+							<h1 className='font-bold text-xl'>Downloaded assets</h1>
 						</div>
-						<ModelList
-							models={downloadedModels}
-							favoriteModels={null}
-							downloadedModels={downloadedModels}
+						<AssetList
+							assets={downloadedAssets}
+							favoriteAssets={null}
+							downloadedAssets={downloadedAssets}
 							onClick={null}
-							selectedModel={null}
+							selectedAsset={null}
 							filterType={null}
 							filterCategory={null}
 							types={null}
@@ -254,35 +247,38 @@ export default function Cterm() {
 				</div>
 				<div className='flex flex-col px-5 my-5 bg-(--color-1) rounded-xl'>
 					<div className='px-4 py-4'>
-						<h2 className="font-bold text-xl">Models</h2>
+						<h2 className="font-bold text-xl">Assets</h2>
 					</div>
-					{selectedModel != null &&
-					(<ModelDetails
-						models={models}
-						index={selectedModel}
-						onClose={handleCloseMenu}
-						onFavorite={handleFavoriteModel}
-						onDownload={handleDownloadModel}
-					/>)}
-					<ModelList
-						models={models}
-						favoriteModels={favoriteModels}
-						onClick={handleModelSelect}
-						selectedModel={selectedModel}
+					<AssetList
+						assets={assets}
+						favoriteAssets={favoriteAssets}
+						selectedAsset={selectedAsset}
 						filterType={filterType}
 						filterCategory={filterCategory}
 						types={types}
 						normalizedSearch={normalizedSearch}
 						theThingYknow={false}
+						onClick={handleAssetSelect}
+						onClose={handleCloseMenu}
+						onFavorite={handleFavoriteAsset}
+						onDownload={handleDownloadAsset}
+						isLoading={isLoadingAssets}
 					/>
-
 				</div>
 			</main>
 		</div>
 	);
 }
 
-function ModelList({models, favoriteModels, onClick, selectedModel, types, filterType, filterCategory, normalizedSearch, theThingYknow}) {
+function AssetList(
+	{
+		assets, favoriteAssets, selectedAsset,
+		types,
+		filterType, filterCategory,
+		normalizedSearch, theThingYknow,
+		onClick, onClose, onFavorite, onDownload,
+		isLoading
+	}) {
 
 	return (
 		<div className={`${theThingYknow
@@ -292,36 +288,43 @@ function ModelList({models, favoriteModels, onClick, selectedModel, types, filte
 			grid
 			gap-5`}
 		>
-			{models.map((model, index) => 
+			{isLoading && <div className="flex justify-center h-20">
+					<h1 className="font-bold text-4xl">Loading...</h1>
+				</div>}
+			{assets.map((asset, index) => 
 				(!normalizedSearch ||
-                                	model.name
-                                       		.toUpperCase()
-                                        	.normalize("NFD")
-                                       		.replace(/[\u0300-\u036f]/g, "")
-                                        	.includes(normalizedSearch)
+                       			asset.name
+                       	               		.toUpperCase()
+                       		                .normalize("NFD")
+                       	                	.replace(/[\u0300-\u036f]/g, "")
+                       		                .includes(normalizedSearch)
 				) && (!filterType ||
-					filterType == types[model.type]
+					filterType == types[asset.type]
 				) && (!filterCategory ||
-					model.categories.find((category) => category == filterCategory)
-				) && (<Model
+					asset.categories.find((category) => category == filterCategory)
+				) && (<Asset
 					key={index}
-					model={model}
-					onClick={onClick}
-					isSelected={index == selectedModel ? true : false}
-					isFavorited={favoriteModels != null
-						? favoriteModels.find((fModel) => fModel == index) ? true : false
+					asset={asset}
+					isSelected={index == selectedAsset ? true : false}
+					isFavorited={favoriteAssets != null
+						? favoriteAssets.find((fAsset) => fAsset == index) != null ? true : false
 						: false
 					}
 					index={index}
-				/>)
-			)}
+					onClick={onClick}
+					onClose={onClose}
+					onFavorite={onFavorite}
+					onDownload={onDownload}
+				/>))}
 		</div>
 	);
 }
 
-function Model({model, onClick, isSelected, isFavorited, index}) {
+function Asset({asset, isSelected, isFavorited, index, onClick, onClose, onFavorite, onDownload}) {
 
 	return (
+		(!isSelected
+		? (
 		<div
 			className={`flex flex-col relative
 			${isSelected
@@ -334,11 +337,11 @@ function Model({model, onClick, isSelected, isFavorited, index}) {
 			}}
 		>
 			<h2 className="absolute top-1 left-0 right-0 mx-auto w-fit font-medium">
-				{model.name}
+				{asset.name}
 			</h2>
 			<img
 				className='m-auto py-10 px-4'
-				src={model.thumbnail_url}
+				src={asset.thumbnail_url}
 				alt="loading.."
 			/>
 			<div className="absolute top-1 left-1">
@@ -348,19 +351,12 @@ function Model({model, onClick, isSelected, isFavorited, index}) {
 				}
 			</div>
 		</div>
-	);
-}
-
-function ModelDetails({models, index, onClose, onFavorite, onDownload}) {
-
-	const model = models[index];
-
-	return (
-		<div className="sticky top-2 md:top-5 lg:top-10 z-10 bg-(--color-1) rounded-xl p-2 md:p-5 lg:p-10 border-1 border-(--color3)">
+		) : (
+		<div className="col-start-1 col-end-5 bg-(--color-1) rounded-xl p-2 md:p-5 lg:p-10 border-3 border-(--color3)">
 			<div className="flex justify-between pb-4">
 				<div className="flex gap-2">
 					<button
-						className="hover:bg-(--color2) active:bg-(--color3) active:scale-110 duration-300 ease-in-out transition-all px-4 py-2 bg-(--color1) rounded-lg cursor-pointer"
+						className="hover:bg-(--color2) active:bg-(--color3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 bg-(--color1) rounded-lg cursor-pointer"
                         			onClick={(e) => {
 							e.stopPropagation();
 							onFavorite(index);
@@ -370,7 +366,7 @@ function ModelDetails({models, index, onClose, onFavorite, onDownload}) {
 					</button>
 
 					<button
-						className="hover:bg-(--color2) active:bg-(--color3) active:scale-110 duration-300 ease-in-out transition-all px-4 py-2 bg-(--color1) rounded-lg cursor-pointer"
+						className="hover:bg-(--color2) active:bg-(--color3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 bg-(--color1) rounded-lg cursor-pointer"
                         			onClick={(e) => {
 							e.stopPropagation();
 							onDownload(index);
@@ -391,16 +387,22 @@ function ModelDetails({models, index, onClose, onFavorite, onDownload}) {
 			</div>
 			<div className="flex h-full">
 				<div className="flex flex-col border-r pr-8 max-w-[50%]">
-					<h1 className='font-bold text-3xl'>{model.name}</h1>
-					<div className="w-[50%] lg:w-full">
+					<h1 className='font-bold text-3xl'>{asset.name}</h1>
+					<div className="relative w-[50%] lg:w-full">
 						<img
-							src={model.thumbnail_url}
+							src={asset.thumbnail_url}
 							className="py-10 max-w-full h-auto mx-auto"
 						/>
+						<div className="absolute top-1 left-1">
+							{isFavorited
+								? <p className="font-bold text-xl">♥️</p>
+								: null
+							}
+						</div>
 					</div>
 					<div>
 						<h2 className="font-bold text-lg pb-2">Description</h2>
-						<p>{model.description}</p>
+						<p>{asset.description}</p>
 					</div>
 				</div>
 				<div className="pl-8">
@@ -408,11 +410,11 @@ function ModelDetails({models, index, onClose, onFavorite, onDownload}) {
 						<h2 className="font-bold text-lg pb-2">Authors</h2>
 						<div className="flex flex-wrap gap-x-2 gap-y-1">
 							<div className="flex flex-col">
-								{Object.keys(model.authors).map((author, index) => 
+								{Object.keys(asset.authors).map((author, index) => 
 								<p key={index}>{author}: </p>)}
 							</div>
 							<div className="flex flex-col">
-								{Object.values(model.authors).map((work, index) => 
+								{Object.values(asset.authors).map((work, index) => 
 								<p key={index}>{work}</p>)}
 							</div>
 						</div>
@@ -421,27 +423,27 @@ function ModelDetails({models, index, onClose, onFavorite, onDownload}) {
 					<div className="pb-2 pt-5 border-b">
 						<h2 className="font-bold text-lg pb-2">Date published</h2>
 						<div className="flex">
-							<p>{Date(model.date_published * 1000).replace(/\(.*\)/g, "")}</p>
+							<p>{Date(asset.date_published * 1000).replace(/\(.*\)/g, "")}</p>
 						</div>
 					</div>
 					<div className="pb-2 pt-5 border-b">
 						<h2 className="font-bold text-lg pb-2">Categories</h2>
 						<div className="flex flex-wrap gap-x-2 gap-y-1">
-							{model.categories.map((category, index) =>
+							{asset.categories.map((category, index) =>
 							<p key={index}>{category},</p>)}
 						</div>
 					</div>
 					<div className="pb-2 pt-5 border-b">
 						<h2 className="font-bold text-lg pb-2">Tags</h2>
 						<div className="flex flex-wrap gap-x-2 gap-y-1">
-							{model.tags.map((tag, index)=>
+							{asset.tags.map((tag, index)=>
 							<p key={index}>{tag},</p>)}
 						</div>
 					</div>
-
 				</div>
 			</div>
-
 		</div>
+		))
 	);
 }
+
