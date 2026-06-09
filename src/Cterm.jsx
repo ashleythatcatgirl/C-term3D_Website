@@ -156,15 +156,19 @@ export default function Cterm() {
 	return (
 		<div className='flex flex-col min-h-dvh min-w-dvw text-(--fg-normal) bg-(--bg-normal)'>
 			<header className='flex h-15 sm:h-18 md:h-20 justify-between items-center bg-(--bg-dark) border-b-2 border-(--color1)'>
-				<div className='px-10 md:px-16 lg:px-22 py-2 w-1/2'>
+				<div className='pl-5 sm:px-10 md:px-16 lg:px-22 py-2 w-1/2'>
 					<h1 className='font-bold text-3xl'>C-term3D</h1>
 				</div>
-				<div className='px-10 md:px-16 lg:px-22 py-2'>
+				<div className='pr-5 sm:px-10 md:px-16 lg:px-22 py-2'>
 					<Link
 						to='/info'
 						className='font-bold'
 					>
-					Info
+						<button
+							className="bg-(--bg-darker) hover:bg-(--color2) active:bg-(--color3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 rounded-lg cursor-pointer border-1 border-(--bg-light)"
+						>
+							Info
+						</button>
 					</Link>
 
 				</div>
@@ -173,7 +177,7 @@ export default function Cterm() {
 				<div className='flex flex-col lg:flex-row px-5 md:px-10 py-2 sm:py-4 md:py-5 my-5 bg-(--bg-dark) rounded-xl'>
 					<div className="flex flex-col min-w-[50%] ">
 						{/* C-term thing */}
-						<div className="px-2 py-4">
+						<div className="px-2 py-2 md:py-4">
 							<h1 className='font-bold text-xl'>Renderer</h1>
 						</div>
 						<div className='relative
@@ -194,28 +198,33 @@ export default function Cterm() {
 						className={`flex flex-col w-full`}
 						style={{ maxHeight: windowWidth >= 1024 ? undefined : imgHeight}}
 					>
-						<div className="px-2 py-4">
+						<div className="px-2 py-2 md:py-4">
 							<h1 className='font-bold text-xl'>Downloaded assets</h1>
 						</div>
-						<AssetList
-							assets={downloadedAssets}
-							favoriteAssets={null}
-							selectedAsset={null}
-							filterType={null}
-							filterCategory={null}
-							types={null}
-							normalizedSearch={null}
-							theThingYknow={true}
-							onClick={handleDeleteAsset}
-							onClose={null}
-							onFavorite={null}
-							onDownload={null}
-							isLoading={false}
-						/>
+						{downloadedAssets.length
+							? <AssetList
+								assets={downloadedAssets}
+								favoriteAssets={null}
+								selectedAsset={null}
+								filterType={null}
+								filterCategory={null}
+								types={null}
+								normalizedSearch={null}
+								theThingYknow={true}
+								onClick={handleDeleteAsset}
+								onClose={null}
+								onFavorite={null}
+								onDownload={null}
+								isLoading={false}
+							/>
+							: <div className="flex justify-center px-4 py-2 md:py-4">
+								<h1 className="text-(--fg-dark) text-md">no downloaded assets..</h1>
+							</div>
+						}
 					</div>
 				</div>
-				<div className='flex flex-col md:flex-row px-2 md:px-4 py-4 gap-2 sm:gap-4 md:gap-5 bg-(--bg-dark) rounded-xl'>
-					<div className='flex flex-col w-full md:w-[50%] gap-2 md:gap-4 p-2 md:p-4 md:border-r-2 md:border-(--color3)'>
+				<div className='flex flex-col md:flex-row px-2 md:px-4 py-2 md:py-4 gap-2 sm:gap-4 md:gap-5 bg-(--bg-dark) rounded-xl'>
+					<div className='flex flex-col w-full md:w-[50%] gap-2 md:gap-4 p-2 md:p-4 md:border-r-2 md:border-(--color1)'>
 						<div className="border-b border-(--color2)">
 							<h2 className="font-bold text-xl">Search</h2>
 						</div>
@@ -223,7 +232,7 @@ export default function Cterm() {
 							<input
                                					 value={search}
 				                                onChange={(e) => setSearch(e.target.value)}
-								className="outline-0 focus:border-(--color1) focus:border-2 w-full p-2 bg-(--bg-normal) border-1 border-(--color2) rounded-lg"
+								className="outline-0 focus:border-(--color1) focus:border-2 w-full p-2 bg-(--bg-normal) border-1 border-(--color2) rounded-lg text-(--fg-dark) "
 							/>
 						</div>
 					</div>
@@ -231,11 +240,11 @@ export default function Cterm() {
 						<div className="border-b border-(--color2)">
 							<h2 className="font-bold text-xl">Filter</h2>
 						</div>
-						<div className="flex gap-4 justify-around">
+						<div className="flex flex-col sm:flex-row gap-4 justify-around">
 							<div className="flex gap-5 items-center">
 								<h2 className="font-bold text-md lg:text-lg">Type</h2>
 								<select
-									className="w-full p-2 bg-(--bg-normal) text-(--fg-dark) border-1 border-(--color2) focus:border-(--color1) focus:border-2 rounded-lg"
+									className="w-full p-2 bg-(--bg-normal) text-(--fg-dark) border-1 border-(--color2) focus:border-(--color1) focus:border-2 rounded-lg cursor-pointer"
 									value={filterType ? filterType : 'all'}
                                 					onChange={(e) => handleFilterType(e.target.value)}
 								>
@@ -248,7 +257,7 @@ export default function Cterm() {
 							<div className="flex gap-5 items-center">
 								<h2 className="font-bold text-md lg:text-lg">Category</h2>
 								<select
-									className="w-full p-2 bg-(--bg-normal) text-(--fg-dark) border-1 border-(--color2) focus:border-(--color1) focus:border-2 rounded-lg"
+									className="w-full p-2 bg-(--bg-normal) text-(--fg-dark) border-1 border-(--color2) focus:border-(--color1) focus:border-2 rounded-lg cursor-pointer disabled:cursor-default"
 									value={filterCategory ? filterCategory : 'all'}
                                 					onChange={(e) => handleFilterCategory(e.target.value)}
 									disabled={filterType ? false : true}
@@ -266,7 +275,7 @@ export default function Cterm() {
 					</div>
 				</div>
 				<div className='flex flex-col px-5 my-5 bg-(--bg-dark) rounded-xl'>
-					<div className='px-4 py-4'>
+					<div className='px-2 py-2 md:py-4'>
 						<h2 className="font-bold text-xl">Assets</h2>
 					</div>
 					<AssetList
@@ -282,6 +291,7 @@ export default function Cterm() {
 						onClose={handleCloseMenu}
 						onFavorite={handleFavoriteAsset}
 						onDownload={handleDownloadAsset}
+						normalize={normalize}
 						isLoading={isLoadingAssets}
 					/>
 				</div>
@@ -296,7 +306,7 @@ function AssetList(
 		types,
 		filterType, filterCategory,
 		normalizedSearch, theThingYknow,
-		onClick, onClose, onFavorite, onDownload,
+		onClick, onClose, onFavorite, onDownload, normalize,
 		isLoading
 	}) {
 
@@ -306,10 +316,11 @@ function AssetList(
 			: 'grid grid-cols-[repeat(auto-fit,minmax(150px,auto))] md:grid-cols-[repeat(auto-fit,minmax(200px,1fr))] xl:grid-cols-[repeat(auto-fit,minmax(300px,auto))]'
 		} gap-2 sm:gap-4 md:gap-5`}
 		>
-			{isLoading && <div className="flex justify-center h-20">
-					<h1 className="font-bold text-4xl">Loading...</h1>
-				</div>}
-			{assets.map((asset, index) => 
+			{isLoading
+				? <div className="flex justify-center h-20">
+					<h1 className="text-(--fg-dark) font-bold text-xl">Loading...</h1>
+				</div>
+				:	assets.map((asset, index) => 
 				(!normalizedSearch ||
                        			normalize(asset.name).includes(normalizedSearch)
 				) && (!filterType ||
@@ -330,7 +341,8 @@ function AssetList(
 					onFavorite={onFavorite}
 					onDownload={onDownload}
 					theThingYknow={theThingYknow}
-				/>))}
+				/>))
+			}
 		</div>
 	);
 }
@@ -351,7 +363,7 @@ function Asset(
 			className={`flex flex-col relative
 			${isSelected
 				? 'bg-(--bg-dark) border-2 md:border-4'
-				: 'bg-(--bg-dark) border-1 md:border-2 hover:bg-(--bg-darker)'
+				: 'bg-(--bg-dark) border-1 md:border-2 hover:bg-(--bg-darker) hover:border-(--color1)'
 			}
 			${theThingYknow
 				? 'text-xs'
@@ -385,9 +397,9 @@ function Asset(
 		) : (
 		<div className="overflow-y-scroll max-h-[500px] col-span-full bg-(--color-1) rounded-xl p-2 md:p-5 lg:p-10 border-1 md:border-3 border-(--color3)">
 			<div className="flex justify-between pb-4">
-				<div className="flex flex-col md:flex-row gap-1 md:gap-2">
+				<div className="flex flex-col sm:flex-row gap-1 md:gap-2">
 					<button
-						className="bg-(--bg-darker) hover:bg-(--) active:bg-(--color3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 rounded-lg cursor-pointer"
+						className="bg-(--bg-darker) hover:bg-(--color2) active:bg-(--color3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 rounded-lg cursor-pointer border-1 border-(--bg-light)"
                         			onClick={(e) => {
 							e.stopPropagation();
 							onFavorite(index);
@@ -397,7 +409,7 @@ function Asset(
 					</button>
 
 					<button
-						className="bg-(--bg-darker) hover:bg-(--color2) active:bg-(--color3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 rounded-lg cursor-pointer"
+						className="bg-(--bg-darker) hover:bg-(--color2) active:bg-(--color3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 rounded-lg cursor-pointer border-1 border-(--bg-light)"
                         			onClick={(e) => {
 							e.stopPropagation();
 							onDownload(index);
@@ -409,7 +421,7 @@ function Asset(
 				</div>
 				<div>
 					<button
-						className="bg-(--bg-darker) hover:bg-(--color2) active:bg-(--color3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 rounded-lg cursor-pointer"
+						className="bg-(--bg-darker) hover:bg-(--color2) active:bg-(--color3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 rounded-lg cursor-pointer border-1 border-(--bg-light)"
 						onClick={onClose}
 					>
 					<span className="text-red-400">X</span> Close
@@ -417,7 +429,7 @@ function Asset(
 				</div>
 			</div>
 			<div className="flex flex-col md:flex-row">
-				<div className="flex flex-col md:border-r px-2 md:px-0 md:pr-8 w-full md:max-w-[50%]">
+				<div className="flex flex-col md:border-r border-(--color1) px-2 md:px-0 md:pr-8 w-full md:max-w-[50%]">
 					<h1 className='font-bold text-2xl md:text-3xl'>{asset.name}</h1>
 					<div className="relative w-full md:w-[50%] lg:w-full">
 						<img
@@ -431,13 +443,13 @@ function Asset(
 							}
 						</div>
 					</div>
-					<div className="pb-2 border-b md:pb-0 md:border-0">
+					<div className="pb-2 border-b md:pb-0 md:border-0 border-(--color2)">
 						<h2 className="font-bold text-lg pb-2">Description</h2>
 						<p className="text-justify">{asset.description}</p>
 					</div>
 				</div>
 				<div className="pl-2 md:pl-8">
-					<div className="pb-2 pt-5 md:pt-0 border-b">
+					<div className="pb-2 pt-5 md:pt-0 border-b border-(--color2)">
 						<h2 className="font-bold text-lg pb-2">Authors</h2>
 						<div className="flex flex-wrap gap-x-2 gap-y-1">
 							<div className="flex flex-col">
@@ -451,13 +463,13 @@ function Asset(
 						</div>
 
 					</div>
-					<div className="pb-2 pt-5 border-b">
+					<div className="pb-2 pt-5 border-b border-(--color2)">
 						<h2 className="font-bold text-lg pb-2">Date published</h2>
 						<div className="flex">
 							<p>{Date(asset.date_published * 1000).replace(/\(.*\)/g, "")}</p>
 						</div>
 					</div>
-					<div className="pb-2 pt-5 border-b">
+					<div className="pb-2 pt-5 border-b border-(--color2)">
 						<h2 className="font-bold text-lg pb-2">Categories</h2>
 						<div className="flex flex-wrap gap-x-2 gap-y-1">
 							{asset.categories.map((category, index) =>
