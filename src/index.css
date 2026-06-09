@@ -7,19 +7,26 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-	--color-2: #1b1a1f;
-	--color-1: #212025;
-	--color0: #2b2a2f;
-	--color1: #2A2438;
-	--color2: #352F44;
-	--color3: #5C5470;
-	--color4: #DBD8E3;
-	--background: oklch(1 0 0);
-	--foreground: oklch(0.145 0 0);
+	--bg-normal: #2b2a2f;
+	--bg-dark: #212025;
+	--bg-darker: #1b1a1f;
+
+	--fg-normal: #dbd4df;
+	--fg-dark: #bab0bf;
+	--fg-light: #e9e0ef;
+
+	--color1: #8D6BB0;
+	--color2: #62426A;
+	--color3: #C88EC0;
+	--color4: #D793A3;
+	--color5: #F6C6D0;
+
+	--background: var(--bg-dark);
+	--foreground: var(--fg-normal);
 	--card: oklch(1 0 0);
 	--card-foreground: oklch(0.145 0 0);
-	--popover: var(--color0); 
-	--popover-foreground: var(--color4);
+	--popover: var(--bg-dark); 
+	--popover-foreground: var(--fg-light);
 	--primary: oklch(0.205 0 0);
 	--primary-foreground: oklch(0.985 0 0);
 	--secondary: oklch(0.97 0 0);

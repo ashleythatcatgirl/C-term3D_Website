@@ -16,7 +16,7 @@ export function useTypes(fetchOnMount = true) {
 		} finally {
 			setIsLoadingTypes(false);
 		}
-	});
+	}, []);
 
 	useEffect(() => {
 		if (fetchOnMount) {
@@ -29,6 +29,5 @@ export function useTypes(fetchOnMount = true) {
 	        isLoadingTypes,
         	refetchTypes: fetchTypes,
     	};
-
 }
 

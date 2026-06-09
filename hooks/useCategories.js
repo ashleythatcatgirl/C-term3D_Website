@@ -16,7 +16,7 @@ export function useCategories(fetchOnMount = true) {
 		} finally {
 			setIsLoadingCategories(false);
 		}
-	});
+	}, []);
 
 	useEffect(() => {
 		if (fetchOnMount) {
@@ -29,6 +29,5 @@ export function useCategories(fetchOnMount = true) {
 	        isLoadingCategories,
         	refetchCategories: fetchCategories,
     	};
-
 }
 

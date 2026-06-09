@@ -1,6 +1,7 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { Link } from "react-router-dom";
+import { useWindowDimensions } from "/hooks/useWindowDimensions.js";
 import { useAssets } from "/hooks/useAssets.js";
 import { useTypes } from "/hooks/useTypes.js";
 import { toast } from "sonner";
@@ -9,11 +10,13 @@ const placeholderImg = "/ctermplaceholder.png"
 const API_URL = "https://api.polyhaven.com";
 
 export default function Cterm() {
+	const { windowWidth, windowHeight } = useWindowDimensions();
+
 	const { assets, isLoadingAssets, refetchAssets } = useAssets(true);
+	const { types, isLoadingTypes, refetchTypes } = useTypes(true);
 
 	const [favoriteAssets, setFavoriteAssets] = useState([]);
 	const [downloadedAssets, setDownloadedAssets] = useState([]);
-	const [types, setTypes] = useState([]);
 	const [categories, setCategories] = useState([]);
 
 	const [filterType, setFilterType] = useState();
@@ -23,24 +26,24 @@ export default function Cterm() {
 
 	const [selectedAsset, setSelectedAsset] = useState();
 
-    	useEffect(() => {
-		handleGetTypes();
+	const imgRef = useRef(null);
+	const [imgHeight, setImgHeight] = useState(0);
+
+	useEffect(() => {
+		const updateHeight = () => {
+        		setImgHeight((imgRef.current?.offsetHeight ?? 0) + 90);
+		};
+		
+		updateHeight();
+		window.addEventListener("resize", updateHeight);
 	}, []);
+
     	useEffect(() => {
 		handleGetLocalStorage();
 	}, []);
     	useEffect(() => {
 		handleGetSessionStorage();
 	}, []);
-
-	const handleGetTypes = async () => {
-		const endpoint = `/types`;
-
-		const response = await fetch(`${API_URL}${endpoint}`);
-		const data = await response.json();
-
-		setTypes(data);
-	};
 
 	const handleGetCategories = async (type) => {
 		const endpoint = `/categories/${type}`;
@@ -51,6 +54,22 @@ export default function Cterm() {
 		const categories = Object.keys(data);
 
 		setCategories(categories);
+	};
+
+	const handleGetLocalStorage = () => {
+		const savedFavorites = localStorage.getItem('favoriteAssets');
+		if (!savedFavorites) return;
+
+		const temp = savedFavorites.split(',');
+		const temp2 = temp.map((t) => t = parseInt(t));
+
+		setFavoriteAssets(temp2);
+	};
+	const handleGetSessionStorage = () => {
+		const savedDownloads = sessionStorage.getItem('downloadedAssets');
+		if (!savedDownloads) return;
+
+		setDownloadedAssets(JSON.parse(savedDownloads));
 	};
 
 	const handleAssetSelect = (index) => {
@@ -114,34 +133,33 @@ export default function Cterm() {
 		setFilterCategory(category);
 	};
 
-	const handleGetLocalStorage = () => {
-		const savedFavorites = localStorage.getItem('favoriteAssets');
-		if (!savedFavorites) return;
+	const handleDeleteAsset = (asset) => {
+		const newDownloads = downloadedAssets.filter((a) => a != asset);
 
-		const temp = savedFavorites.split(',');
-		const temp2 = temp.map((t) => t = parseInt(t));
+		toast.info("Deleted asset");
+		setDownloadedAssets(newDownloads);
+		sessionStorage.setItem('downloadedAssets', JSON.stringify(newDownloads));
+	}
 
-		setFavoriteAssets(temp2);
+	function normalize(str) {
+		const normalized = (
+			str
+			.toUpperCase()
+			.normalize("NFD")
+			.replace(/[\u0300-\u036f]/g, "")
+		);
+
+		return normalized;
 	};
-	const handleGetSessionStorage = () => {
-		const savedDownloads = sessionStorage.getItem('downloadedAssets');
-		if (!savedDownloads) return;
-
-		setDownloadedAssets(JSON.parse(savedDownloads));
-	};
-
-	const normalizedSearch = search
-       		.toUpperCase()
-	        .normalize("NFD")
-       		.replace(/[\u0300-\u036f]/g, "");
-
+	const normalizedSearch = normalize(search);
+		
 	return (
-		<div className='flex flex-col min-h-dvh min-w-dvw text-(--color4) bg-(--color0)'>
-			<header className='flex h-20 justify-between items-center bg-(--color-1) border-b-2 border-(--color3)'>
-				<div className='px-22 py-2 w-1/2'>
+		<div className='flex flex-col min-h-dvh min-w-dvw text-(--fg-normal) bg-(--bg-normal)'>
+			<header className='flex h-15 sm:h-18 md:h-20 justify-between items-center bg-(--bg-dark) border-b-2 border-(--color1)'>
+				<div className='px-10 md:px-16 lg:px-22 py-2 w-1/2'>
 					<h1 className='font-bold text-3xl'>C-term3D</h1>
 				</div>
-				<div className='px-22 py-2'>
+				<div className='px-10 md:px-16 lg:px-22 py-2'>
 					<Link
 						to='/info'
 						className='font-bold'
@@ -151,49 +169,53 @@ export default function Cterm() {
 
 				</div>
 			</header>
-			<main className='flex flex-col mx-20 gap-2'>
-				<div className='flex flex-col lg:flex-row px-10 py-5 my-5 bg-(--color-1) rounded-xl'>
-					<div className="flex flex-col min-w-[50%]">
+			<main className='flex flex-col mx-2 sm:mx-5 md:mx-10 lg:mx-20 gap-2'>
+				<div className='flex flex-col lg:flex-row px-5 md:px-10 py-2 sm:py-4 md:py-5 my-5 bg-(--bg-dark) rounded-xl'>
+					<div className="flex flex-col min-w-[50%] ">
 						{/* C-term thing */}
 						<div className="px-2 py-4">
 							<h1 className='font-bold text-xl'>Renderer</h1>
 						</div>
 						<div className='relative
-								p-1
-								sm:p-2
-								md:p-3
-								lg:p-4
-								w-[90%] bg-black rounded-2xl'
+								p-1 sm:p-2 md:p-3 lg:p-4
+							w-full lg:w-[90%] bg-black rounded-2xl'
 						>
 							<p className="absolute top-[40%] left-0 right-0 mx-auto w-fit text-[5vw] font-bold">
 								PLACEHOLDER
 							</p>
 							<img
-								className="mx-auto "
+								ref={imgRef}
+								className="mx-auto"
 								src={placeholderImg}
 							/>
 						</div>
 					</div>
-					<div className="flex flex-col w-full">
+					<div
+						className={`flex flex-col w-full`}
+						style={{ maxHeight: windowWidth >= 1024 ? undefined : imgHeight}}
+					>
 						<div className="px-2 py-4">
 							<h1 className='font-bold text-xl'>Downloaded assets</h1>
 						</div>
 						<AssetList
 							assets={downloadedAssets}
 							favoriteAssets={null}
-							downloadedAssets={downloadedAssets}
-							onClick={null}
 							selectedAsset={null}
 							filterType={null}
 							filterCategory={null}
 							types={null}
 							normalizedSearch={null}
 							theThingYknow={true}
+							onClick={handleDeleteAsset}
+							onClose={null}
+							onFavorite={null}
+							onDownload={null}
+							isLoading={false}
 						/>
 					</div>
 				</div>
-				<div className='flex px-4 py-4 gap-5 bg-(--color-1) rounded-xl'>
-					<div className='flex flex-col w-[50%] gap-4 p-4 border-r-2 border-(--color3)'>
+				<div className='flex flex-col md:flex-row px-2 md:px-4 py-4 gap-2 sm:gap-4 md:gap-5 bg-(--bg-dark) rounded-xl'>
+					<div className='flex flex-col w-full md:w-[50%] gap-2 md:gap-4 p-2 md:p-4 md:border-r-2 md:border-(--color3)'>
 						<div className="border-b border-(--color2)">
 							<h2 className="font-bold text-xl">Search</h2>
 						</div>
@@ -201,19 +223,19 @@ export default function Cterm() {
 							<input
                                					 value={search}
 				                                onChange={(e) => setSearch(e.target.value)}
-								className="w-full p-2 bg-(--color-1) border-1 border-(--color3) rounded-lg"
+								className="outline-0 focus:border-(--color1) focus:border-2 w-full p-2 bg-(--bg-normal) border-1 border-(--color2) rounded-lg"
 							/>
 						</div>
 					</div>
-					<div className='flex flex-col w-[50%] gap-4 p-4'>
+					<div className='flex flex-col w-full md:w-[50%] gap-2 md:gap-4 p-2 md:p-4'>
 						<div className="border-b border-(--color2)">
 							<h2 className="font-bold text-xl">Filter</h2>
 						</div>
 						<div className="flex gap-4 justify-around">
 							<div className="flex gap-5 items-center">
-								<h2 className="font-bold text-xl">Type</h2>
+								<h2 className="font-bold text-md lg:text-lg">Type</h2>
 								<select
-									className="w-full p-2 bg-(--color-1) border-1 border-(--color3) rounded-lg"
+									className="w-full p-2 bg-(--bg-normal) text-(--fg-dark) border-1 border-(--color2) focus:border-(--color1) focus:border-2 rounded-lg"
 									value={filterType ? filterType : 'all'}
                                 					onChange={(e) => handleFilterType(e.target.value)}
 								>
@@ -224,9 +246,9 @@ export default function Cterm() {
 								</select>
 							</div>
 							<div className="flex gap-5 items-center">
-								<h2 className="font-bold text-xl">Category</h2>
+								<h2 className="font-bold text-md lg:text-lg">Category</h2>
 								<select
-									className="w-full p-2 bg-(--color-1) border-1 border-(--color3) rounded-lg"
+									className="w-full p-2 bg-(--bg-normal) text-(--fg-dark) border-1 border-(--color2) focus:border-(--color1) focus:border-2 rounded-lg"
 									value={filterCategory ? filterCategory : 'all'}
                                 					onChange={(e) => handleFilterCategory(e.target.value)}
 									disabled={filterType ? false : true}
@@ -242,10 +264,8 @@ export default function Cterm() {
 							</div>
 						</div>
 					</div>
-
-
 				</div>
-				<div className='flex flex-col px-5 my-5 bg-(--color-1) rounded-xl'>
+				<div className='flex flex-col px-5 my-5 bg-(--bg-dark) rounded-xl'>
 					<div className='px-4 py-4'>
 						<h2 className="font-bold text-xl">Assets</h2>
 					</div>
@@ -282,22 +302,16 @@ function AssetList(
 
 	return (
 		<div className={`${theThingYknow
-			? 'overflow-y max-h-[42vh] overflow-scroll grid-cols-[repeat(auto-fit,minmax(50px,1fr))] md:grid-cols-[repeat(auto-fit,minmax(100px,1fr))] xl:grid-cols-[repeat(auto-fit,minmax(150px,1fr))]'
-			: 'grid-cols-[repeat(auto-fit,minmax(100px,1fr))] md:grid-cols-[repeat(auto-fit,minmax(200px,1fr))] xl:grid-cols-[repeat(auto-fit,minmax(300px,1fr))]'
-			}
-			grid
-			gap-5`}
+			? 'overflow-x-scroll flex lg:overflow-y-scroll lg:grid lg:grid-cols-[repeat(auto-fit,minmax(100px,1fr))] xl:grid-cols-[repeat(auto-fit,minmax(150px,1fr))]'
+			: 'grid grid-cols-[repeat(auto-fit,minmax(150px,auto))] md:grid-cols-[repeat(auto-fit,minmax(200px,1fr))] xl:grid-cols-[repeat(auto-fit,minmax(300px,auto))]'
+		} gap-2 sm:gap-4 md:gap-5`}
 		>
 			{isLoading && <div className="flex justify-center h-20">
 					<h1 className="font-bold text-4xl">Loading...</h1>
 				</div>}
 			{assets.map((asset, index) => 
 				(!normalizedSearch ||
-                       			asset.name
-                       	               		.toUpperCase()
-                       		                .normalize("NFD")
-                       	                	.replace(/[\u0300-\u036f]/g, "")
-                       		                .includes(normalizedSearch)
+                       			normalize(asset.name).includes(normalizedSearch)
 				) && (!filterType ||
 					filterType == types[asset.type]
 				) && (!filterCategory ||
@@ -315,6 +329,7 @@ function AssetList(
 					onClose={onClose}
 					onFavorite={onFavorite}
 					onDownload={onDownload}
+					theThingYknow={theThingYknow}
 				/>))}
 		</div>
 	);
@@ -325,7 +340,8 @@ function Asset(
 		asset,
 		isSelected, isFavorited,
 		index,
-		onClick, onClose, onFavorite, onDownload
+		onClick, onClose, onFavorite, onDownload,
+		theThingYknow
 	}) {
 
 	return (
@@ -334,19 +350,28 @@ function Asset(
 		<div
 			className={`flex flex-col relative
 			${isSelected
-				? 'bg-(--color-2) border-4'
-				: 'bg-(--color-1) border-2 hover:bg-(--color-2)'
-			} border-(--color3) rounded-xl transition-all`}
-                        onClick={(e) => {
-				e.stopPropagation();
-				onClick(index);
-			}}
+				? 'bg-(--bg-dark) border-2 md:border-4'
+				: 'bg-(--bg-dark) border-1 md:border-2 hover:bg-(--bg-darker)'
+			}
+			${theThingYknow
+				? 'text-xs'
+				: 'text-sm lg:text-base'
+			} border-(--color2) rounded-xl transition-all min-w-20 lg:min-w-0`}
+                        onClick={theThingYknow
+				? (e) => {
+					e.stopPropagation();
+					onClick(asset);}
+				: (e) => {
+					e.stopPropagation();
+					onClick(index);
+				}
+			}
 		>
-			<h2 className="absolute top-1 left-0 right-0 mx-auto w-fit font-medium">
+			<h2 className="text-center absolute top-2 md:top-4 left-1 right-1 mx-auto w-fit font-medium">
 				{asset.name}
 			</h2>
 			<img
-				className='m-auto py-10 px-4'
+				className='m-auto pt-15 pb-5 px-4'
 				src={asset.thumbnail_url}
 				alt="loading.."
 			/>
@@ -358,11 +383,11 @@ function Asset(
 			</div>
 		</div>
 		) : (
-		<div className="col-start-1 col-end-5 bg-(--color-1) rounded-xl p-2 md:p-5 lg:p-10 border-3 border-(--color3)">
+		<div className="overflow-y-scroll max-h-[500px] col-span-full bg-(--color-1) rounded-xl p-2 md:p-5 lg:p-10 border-1 md:border-3 border-(--color3)">
 			<div className="flex justify-between pb-4">
-				<div className="flex gap-2">
+				<div className="flex flex-col md:flex-row gap-1 md:gap-2">
 					<button
-						className="hover:bg-(--color2) active:bg-(--color3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 bg-(--color1) rounded-lg cursor-pointer"
+						className="bg-(--bg-darker) hover:bg-(--) active:bg-(--color3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 rounded-lg cursor-pointer"
                         			onClick={(e) => {
 							e.stopPropagation();
 							onFavorite(index);
@@ -372,7 +397,7 @@ function Asset(
 					</button>
 
 					<button
-						className="hover:bg-(--color2) active:bg-(--color3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 bg-(--color1) rounded-lg cursor-pointer"
+						className="bg-(--bg-darker) hover:bg-(--color2) active:bg-(--color3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 rounded-lg cursor-pointer"
                         			onClick={(e) => {
 							e.stopPropagation();
 							onDownload(index);
@@ -384,17 +409,17 @@ function Asset(
 				</div>
 				<div>
 					<button
-						className="hover:bg-(--color2) active:bg-(--color3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 bg-(--color1) rounded-lg cursor-pointer"
+						className="bg-(--bg-darker) hover:bg-(--color2) active:bg-(--color3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 rounded-lg cursor-pointer"
 						onClick={onClose}
 					>
 					<span className="text-red-400">X</span> Close
 					</button>
 				</div>
 			</div>
-			<div className="flex">
-				<div className="flex flex-col border-r pr-8 max-w-[50%]">
-					<h1 className='font-bold text-3xl'>{asset.name}</h1>
-					<div className="relative w-[50%] lg:w-full">
+			<div className="flex flex-col md:flex-row">
+				<div className="flex flex-col md:border-r px-2 md:px-0 md:pr-8 w-full md:max-w-[50%]">
+					<h1 className='font-bold text-2xl md:text-3xl'>{asset.name}</h1>
+					<div className="relative w-full md:w-[50%] lg:w-full">
 						<img
 							src={asset.thumbnail_url}
 							className="py-10 max-w-full h-auto mx-auto"
@@ -406,13 +431,13 @@ function Asset(
 							}
 						</div>
 					</div>
-					<div>
+					<div className="pb-2 border-b md:pb-0 md:border-0">
 						<h2 className="font-bold text-lg pb-2">Description</h2>
-						<p>{asset.description}</p>
+						<p className="text-justify">{asset.description}</p>
 					</div>
 				</div>
-				<div className="pl-8">
-					<div className="pb-2 border-b">
+				<div className="pl-2 md:pl-8">
+					<div className="pb-2 pt-5 md:pt-0 border-b">
 						<h2 className="font-bold text-lg pb-2">Authors</h2>
 						<div className="flex flex-wrap gap-x-2 gap-y-1">
 							<div className="flex flex-col">
@@ -439,7 +464,7 @@ function Asset(
 							<p key={index}>{category},</p>)}
 						</div>
 					</div>
-					<div className="pb-2 pt-5 border-b">
+					<div className="pb-2 pt-5">
 						<h2 className="font-bold text-lg pb-2">Tags</h2>
 						<div className="flex flex-wrap gap-x-2 gap-y-1">
 							{asset.tags.map((tag, index)=>
