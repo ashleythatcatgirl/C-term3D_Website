@@ -20,11 +20,9 @@ Currently has a feature for listing through all availible assets from the api, s
 
 - The loading takes too long and some api fetches are not necessary
 - The code is a huge mess and i have to rewrite it
-- A lot of things are still missing (for example the info page that i just forgot about)
 - The design is booring, and extremely meh
 - The program implementation is well.. non existant
 - There are a few details missing for assets in terms of info
-- The page isnt exactly the most mobile friendly
 - Others for sure
 
 ### Frontend
