@@ -367,7 +367,7 @@ function Asset(
 			${theThingYknow
 				? 'text-xs'
 				: 'text-sm lg:text-base'
-			} border-(--color2) rounded-xl transition-all sm:min-w-20 lg:min-w-0`}
+			} border-(--color2) rounded-xl transition-all md:min-w-20 lg:min-w-0`}
                         onClick={theThingYknow
 				? (e) => {
 					e.stopPropagation();
@@ -382,7 +382,7 @@ function Asset(
 				{asset.name}
 			</h2>
 			<img
-				className='m-auto w-full pt-5 sm:pt-10 md:pt-15 pb-5 px-4'
+				className='m-auto pt-5 sm:pt-10 md:pt-15 pb-5 px-4'
 				src={asset.thumbnail_url}
 				alt="loading.."
 			/>
