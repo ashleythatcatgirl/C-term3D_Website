@@ -27,7 +27,6 @@ export function useTypes(fetchOnMount = true) {
 	return {
        		types,
 	        isLoadingTypes,
-        	refetchTypes: fetchTypes,
     	};
 }
 

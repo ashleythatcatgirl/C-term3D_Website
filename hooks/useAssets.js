@@ -27,7 +27,6 @@ export function useAssets(fetchOnMount = true) {
 	return {
        		assets,
 	        isLoadingAssets,
-        	refetchAssets: fetchAssets,
     	};
 }
 

@@ -10,7 +10,7 @@ const placeholderImg = "/ctermplaceholder.png"
 const API_URL = "https://api.polyhaven.com";
 
 export default function Cterm() {
-	const { windowWidth, windowHeight } = useWindowDimensions();
+	const { width: windowWidth, height: windowHeight} = useWindowDimensions();
 
 	const { assets, isLoadingAssets, refetchAssets } = useAssets(true);
 	const { types, isLoadingTypes, refetchTypes } = useTypes(true);
@@ -73,11 +73,10 @@ export default function Cterm() {
 	};
 
 	const handleAssetSelect = (index) => {
-		if (index == selectedAsset) {
-			setSelectedAsset(null);
-			return;
-		}
-		setSelectedAsset(index);
+		setSelectedAsset(index == selectedAsset
+			? null
+			: index
+		);
 	};
 
 	const handleCloseMenu = () => {
@@ -152,7 +151,7 @@ export default function Cterm() {
 		return normalized;
 	};
 	const normalizedSearch = normalize(search);
-		
+
 	return (
 		<div className='flex flex-col min-h-dvh min-w-dvw text-(--fg-normal) bg-(--bg-normal)'>
 			<header className='flex h-15 sm:h-18 md:h-20 justify-between items-center bg-(--bg-dark) border-b-2 border-(--color1)'>
@@ -196,7 +195,7 @@ export default function Cterm() {
 					</div>
 					<div
 						className={`flex flex-col w-full`}
-						style={{ maxHeight: windowWidth >= 1024 ? undefined : imgHeight}}
+						style={{ maxHeight: windowWidth >= 1024 ? imgHeight : undefined}}
 					>
 						<div className="px-2 py-2 md:py-4">
 							<h1 className='font-bold text-xl'>Downloaded assets</h1>
@@ -368,7 +367,7 @@ function Asset(
 			${theThingYknow
 				? 'text-xs'
 				: 'text-sm lg:text-base'
-			} border-(--color2) rounded-xl transition-all min-w-20 lg:min-w-0`}
+			} border-(--color2) rounded-xl transition-all sm:min-w-20 lg:min-w-0`}
                         onClick={theThingYknow
 				? (e) => {
 					e.stopPropagation();
@@ -383,7 +382,7 @@ function Asset(
 				{asset.name}
 			</h2>
 			<img
-				className='m-auto pt-15 pb-5 px-4'
+				className='m-auto w-full pt-5 sm:pt-10 md:pt-15 pb-5 px-4'
 				src={asset.thumbnail_url}
 				alt="loading.."
 			/>

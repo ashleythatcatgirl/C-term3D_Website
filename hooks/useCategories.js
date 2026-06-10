@@ -2,7 +2,7 @@
 import { api } from "/lib/api";
 import { useCallback, useEffect, useState } from "react";
 
-export function useCategories(fetchOnMount = true) {
+export function useCategories(types, fetchOnMount = true) {
 	const [categories, setCategories] = useState([]);
 	const [isLoadingCategories, setIsLoadingCategories] = useState(false);
 
@@ -27,7 +27,6 @@ export function useCategories(fetchOnMount = true) {
 	return {
        		categories,
 	        isLoadingCategories,
-        	refetchCategories: fetchCategories,
     	};
 }
 
