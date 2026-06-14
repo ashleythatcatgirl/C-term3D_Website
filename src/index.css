@@ -7,10 +7,10 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-	--bg-normal: #2b2a2f;
-	--bg-dark: #212025;
-	--bg-darker: #1b1a1f;
-	--bg-light: #323136;
+	--bg-normal: #111015;
+	--bg-dark: #0e0d12;
+	--bg-darker: #0b0a0f;
+	--bg-light: #16151a;
 
 	--fg-normal: #dbd4df;
 	--fg-dark: #bab0bf;

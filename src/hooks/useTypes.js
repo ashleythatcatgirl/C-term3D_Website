@@ -1,5 +1,5 @@
 
-import { api } from "/lib/api";
+import { api } from "../lib/api.js";
 import { useCallback, useEffect, useState } from "react";
 
 export function useTypes(fetchOnMount = true) {

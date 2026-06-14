@@ -1,23 +1,26 @@
 
-import { useEffect, useState, useRef, useLayoutEffect } from "react";
-import { Link } from "react-router-dom";
-import { useWindowDimensions } from "/hooks/useWindowDimensions.js";
-import { useAssets } from "/hooks/useAssets.js";
-import { useTypes } from "/hooks/useTypes.js";
+import { useEffect, useState, useRef } from "react";
+import { useWindowDimensions } from "../hooks/useWindowDimensions.js";
+import { useAssets } from "../hooks/useAssets.js";
+import { useTypes } from "../hooks/useTypes.js";
+import { useCategories } from "../hooks/useCategories";
 import { toast } from "sonner";
+import { Header } from "../components/Header.jsx";
 
 const placeholderImg = "/ctermplaceholder.png"
-const API_URL = "https://api.polyhaven.com";
 
 export default function Cterm() {
 	const { width: windowWidth, height: windowHeight} = useWindowDimensions();
 
-	const { assets, isLoadingAssets, refetchAssets } = useAssets(true);
-	const { types, isLoadingTypes, refetchTypes } = useTypes(true);
+	const { assets, isLoadingAssets } = useAssets();
+	const { types, isLoadingTypes } = useTypes();
+	const { categories, isLoadingCategories } = useCategories();
 
-	const [favoriteAssets, setFavoriteAssets] = useState([]);
-	const [downloadedAssets, setDownloadedAssets] = useState([]);
-	const [categories, setCategories] = useState([]);
+	const initialFavorites = JSON.parse(localStorage.getItem('favoriteAssets'));
+	const initialDownloads = JSON.parse(sessionStorage.getItem('downloadedAssets'));
+
+	const [favoriteAssets, setFavoriteAssets] = useState(initialFavorites ? initialFavorites : []);
+	const [downloadedAssets, setDownloadedAssets] = useState(initialDownloads? initialDownloads : []);
 
 	const [filterType, setFilterType] = useState();
 	const [filterCategory, setFilterCategory] = useState();
@@ -38,51 +41,6 @@ export default function Cterm() {
 		window.addEventListener("resize", updateHeight);
 	}, []);
 
-    	useEffect(() => {
-		handleGetLocalStorage();
-	}, []);
-    	useEffect(() => {
-		handleGetSessionStorage();
-	}, []);
-
-	const handleGetCategories = async (type) => {
-		const endpoint = `/categories/${type}`;
-
-		const response = await fetch(`${API_URL}${endpoint}`);
-		const data = await response.json();
-
-		const categories = Object.keys(data);
-
-		setCategories(categories);
-	};
-
-	const handleGetLocalStorage = () => {
-		const savedFavorites = localStorage.getItem('favoriteAssets');
-		if (!savedFavorites) return;
-
-		const temp = savedFavorites.split(',');
-		const temp2 = temp.map((t) => t = parseInt(t));
-
-		setFavoriteAssets(temp2);
-	};
-	const handleGetSessionStorage = () => {
-		const savedDownloads = sessionStorage.getItem('downloadedAssets');
-		if (!savedDownloads) return;
-
-		setDownloadedAssets(JSON.parse(savedDownloads));
-	};
-
-	const handleAssetSelect = (index) => {
-		setSelectedAsset(index == selectedAsset
-			? null
-			: index
-		);
-	};
-
-	const handleCloseMenu = () => {
-		setSelectedAsset(null);
-	};
-
 	const handleFavoriteAsset = (index) => {
 		let newFavorites = [];
 		if (favoriteAssets.find((fAsset) => fAsset === index) != null) {
@@ -94,7 +52,7 @@ export default function Cterm() {
 		}
 
 		setFavoriteAssets(newFavorites);
-		localStorage.setItem('favoriteAssets', newFavorites);
+		localStorage.setItem('favoriteAssets', JSON.stringify(newFavorites));
 	};
 
 	const handleDownloadAsset = (index) => {
@@ -115,12 +73,10 @@ export default function Cterm() {
 
 		if (type == 'all') {
 			setFilterType(null);
-			setCategories([]);
 			return;
 		}
 
 		setFilterType(type);
-		handleGetCategories(type);
 	};
 
 	const handleFilterCategory = (category) => {
@@ -154,29 +110,14 @@ export default function Cterm() {
 
 	return (
 		<div className='flex flex-col min-h-dvh min-w-dvw text-(--fg-normal) bg-(--bg-normal)'>
-			<header className='flex h-15 sm:h-18 md:h-20 justify-between items-center bg-(--bg-dark) border-b-2 border-(--color1)'>
-				<div className='pl-5 sm:px-10 md:px-16 lg:px-22 py-2 w-1/2'>
-					<h1 className='font-bold text-3xl'>C-term3D</h1>
-				</div>
-				<div className='pr-5 sm:px-10 md:px-16 lg:px-22 py-2'>
-					<Link
-						to='/info'
-						className='font-bold'
-					>
-						<button
-							className="bg-(--bg-darker) hover:bg-(--color2) active:bg-(--color3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 rounded-lg cursor-pointer border-1 border-(--bg-light)"
-						>
-							Info
-						</button>
-					</Link>
-
-				</div>
-			</header>
-			<main className='flex flex-col mx-2 sm:mx-5 md:mx-10 lg:mx-20 gap-2'>
+			<Header
+				title="Cterm3D"
+			/>
+			<main className='flex flex-col mx-2 sm:mx-5 md:mx-10 lg:mx-30 gap-2'>
 				<div className='flex flex-col lg:flex-row px-5 md:px-10 py-2 sm:py-4 md:py-5 my-5 bg-(--bg-dark) rounded-xl'>
 					<div className="flex flex-col min-w-[50%] ">
 						{/* C-term thing */}
-						<div className="px-2 py-2 md:py-4">
+						<div className="px-2 py-2 md:py-4 pr-4">
 							<h1 className='font-bold text-xl'>Renderer</h1>
 						</div>
 						<div className='relative
@@ -247,10 +188,15 @@ export default function Cterm() {
 									value={filterType ? filterType : 'all'}
                                 					onChange={(e) => handleFilterType(e.target.value)}
 								>
-									<option value='all'>all</option>
-									{types.map((type, index) => 
-										   <option key={index} value={type}>{type}</option>
-									)}
+									{!isLoadingTypes
+									&& <option value='all'>all</option>
+									}
+									{isLoadingTypes
+										? <option value="all">Loading...</option>
+										: types.map((type, index) => 
+											<option key={index} value={type}>{type}</option>
+										)
+									}
 								</select>
 							</div>
 							<div className="flex gap-5 items-center">
@@ -264,8 +210,8 @@ export default function Cterm() {
 									{!filterType && (
 										<option value='all'>Select a type first</option>
 									)}
-									{categories && (
-									categories.map((category, index) => 
+									{filterType && (
+									categories[filterType].map((category, index) => 
 										   <option key={index} value={category}>{category}</option>
 									))}
 								</select>
@@ -286,8 +232,8 @@ export default function Cterm() {
 						types={types}
 						normalizedSearch={normalizedSearch}
 						theThingYknow={false}
-						onClick={handleAssetSelect}
-						onClose={handleCloseMenu}
+						onClick={setSelectedAsset}
+						onClose={setSelectedAsset}
 						onFavorite={handleFavoriteAsset}
 						onDownload={handleDownloadAsset}
 						normalize={normalize}
@@ -421,7 +367,10 @@ function Asset(
 				<div>
 					<button
 						className="bg-(--bg-darker) hover:bg-(--color2) active:bg-(--color3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 rounded-lg cursor-pointer border-1 border-(--bg-light)"
-						onClick={onClose}
+						onClick={(e) => {
+							e.stopPropagation();
+							onClose(null);
+						}}
 					>
 					<span className="text-red-400">X</span> Close
 					</button>

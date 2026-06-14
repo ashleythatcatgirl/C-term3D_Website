@@ -1,29 +1,13 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Header } from "../components/Header.jsx";
 
 export default function Info() {
 
 	return (
 		<div className='flex flex-col min-h-dvh min-w-dvw text-(--fg-normal) bg-(--bg-normal)'>
-			<header className='flex h-15 sm:h-18 md:h-20 justify-between items-center bg-(--bg-dark) border-b-2 border-(--color1)'>
-				<div className='pl-5 sm:px-10 md:px-16 lg:px-22 py-2 w-1/2'>
-					<h1 className='font-bold text-3xl'>Info</h1>
-				</div>
-				<div className='pr-5 sm:px-10 md:px-16 lg:px-22 py-2'>
-					<Link
-						to='/'
-						className='font-bold'
-					>
-						<button
-							className="bg-(--bg-darker) hover:bg-(--color2) active:bg-(--color3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 rounded-lg cursor-pointer border-1 border-(--bg-light)"
-						>
-							Asset Library
-						</button>
-					</Link>
-
-				</div>
-			</header>
-
+			<Header
+				title="Info"
+			/>
 			<main className='flex mx-2 sm:mx-5 md:mx-10 lg:mx-20 gap-2'>
 				<div className='flex flex-col lg:flex-row w-full px-5 md:px-10 py-2 gap-5 sm:py-4 md:py-5 my-5 bg-(--bg-dark) rounded-xl'>
 					<div className="flex flex-col px-2 md:px-4 py-4 bg-(--bg-darker) md:w-[60%] rounded-xl">
