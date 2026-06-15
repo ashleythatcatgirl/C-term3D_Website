@@ -12,7 +12,7 @@ export default function App() {
 		<Router>
             		<Routes>
                 		<Route exact path="/" element={<Home/>}/>
-		                <Route path="/cterm" element={<Cterm/>}/>
+		                <Route path="/cterm3D" element={<Cterm/>}/>
 		                <Route path="/info" element={<Info/>}/>
             		</Routes>
             		<Toaster />

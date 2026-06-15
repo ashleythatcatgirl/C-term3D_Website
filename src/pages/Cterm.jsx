@@ -1,15 +1,20 @@
-
 import { useEffect, useState, useRef } from "react";
+import { normalize, setLocalStorage, setSessionStorage, checkAsset } from "../lib/utils.js";
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "motion/react"
+
 import { toast } from "sonner";
+import { Header } from "../components/Header.jsx";
+import { Title } from "../components/Title.jsx";
+import { Renderer } from "../components/Renderer.jsx";
 
 import { useWindowDimensions } from "../hooks/useWindowDimensions.js";
 import { useAssets } from "../hooks/useAssets.js";
 import { useTypes } from "../hooks/useTypes.js";
 import { useCategories } from "../hooks/useCategories";
 
-import { Header } from "../components/Header.jsx";
-
 const placeholderImg = "/ctermplaceholder.png"
+
+const initLoadedAssets = 50;
 
 export default function Cterm() {
 	const { width: windowWidth, height: windowHeight} = useWindowDimensions();
@@ -18,11 +23,10 @@ export default function Cterm() {
 	const { types, isLoadingTypes } = useTypes();
 	const { categories, isLoadingCategories } = useCategories();
 
-	const initialFavorites = JSON.parse(localStorage.getItem('favoriteAssets'));
-	const initialDownloads = JSON.parse(sessionStorage.getItem('downloadedAssets'));
-
-	const [favoriteAssets, setFavoriteAssets] = useState(initialFavorites ? initialFavorites : []);
-	const [downloadedAssets, setDownloadedAssets] = useState(initialDownloads? initialDownloads : []);
+	const initFavorites = JSON.parse(localStorage.getItem('favoriteAssets'));
+	const initDownloads = JSON.parse(sessionStorage.getItem('downloadedAssets'));
+	const [favoriteAssets, setFavoriteAssets] = useState(initFavorites ? initFavorites : []);
+	const [downloadedAssets, setDownloadedAssets] = useState(initDownloads ? initDownloads : []);
 
 	const [filterType, setFilterType] = useState();
 	const [filterCategory, setFilterCategory] = useState();
@@ -30,8 +34,9 @@ export default function Cterm() {
     	const [search, setSearch] = useState('');
 
 	const [selectedAsset, setSelectedAsset] = useState();
+	const [loadedAssets, setLoadedAssets] = useState(initLoadedAssets);
 
-	const imgRef = useRef(null);
+	const imgRef = useRef();
 	const [imgHeight, setImgHeight] = useState(0);
 
 	useEffect(() => {
@@ -43,34 +48,33 @@ export default function Cterm() {
 		window.addEventListener("resize", updateHeight);
 	}, []);
 
-	const handleFavoriteAsset = (index) => {
+	const handleFavoriteAsset = (assetName) => {
 		let newFavorites = [];
-		if (favoriteAssets.find((fAsset) => fAsset === index) != null) {
-			newFavorites = favoriteAssets.filter((fAsset) => fAsset != index);
+		if (favoriteAssets.find((fAsset) => fAsset === assetName) != null) {
+			newFavorites = favoriteAssets.filter((fAsset) => fAsset != assetName);
 			toast.info("Removed from favorites");
 		} else {
-			newFavorites = [...favoriteAssets, index];
+			newFavorites = [...favoriteAssets, assetName];
 			toast.info("Added to favorites");
 		}
 
 		setFavoriteAssets(newFavorites);
-		localStorage.setItem('favoriteAssets', JSON.stringify(newFavorites));
+		setLocalStorage("favoriteAssets", newFavorites);
 	};
 
-	const handleDownloadAsset = (index) => {
-		if (downloadedAssets.find((dAsset) => dAsset == assets[index]) != null) {
-			toast.info("Redownloading asset");
-		} else {
-			toast.info("Downloading new asset");
-		}
+	const handleDownloadAsset = (asset) => {
+		const newDownloads = [...downloadedAssets, asset];
 
-		const newDownloads = [...downloadedAssets, assets[index]];
+		console.log(newDownloads);
+
+		toast.info("Downloading asset");
 
 		setDownloadedAssets(newDownloads);
-		sessionStorage.setItem('downloadedAssets', JSON.stringify(newDownloads));
+		setSessionStorage("downloadedAssets", newDownloads);
 	};
 
 	const handleFilterType = (type) => {
+		setLoadedAssets(initLoadedAssets);
 		setFilterCategory(null);
 
 		if (type == 'all') {
@@ -82,6 +86,7 @@ export default function Cterm() {
 	};
 
 	const handleFilterCategory = (category) => {
+		setLoadedAssets(initLoadedAssets);
 		if (category == 'all') {
 			setFilterCategory(null);
 			return;
@@ -91,23 +96,15 @@ export default function Cterm() {
 	};
 
 	const handleDeleteAsset = (asset) => {
-		const newDownloads = downloadedAssets.filter((a) => a != asset);
+		const newDownloads = downloadedAssets.filter((dAsset) => dAsset != asset);
 
+		console.log(newDownloads);
 		toast.info("Deleted asset");
+
 		setDownloadedAssets(newDownloads);
-		sessionStorage.setItem('downloadedAssets', JSON.stringify(newDownloads));
+		setSessionStorage("downloadedAssets", newDownloads);
 	}
 
-	function normalize(str) {
-		const normalized = (
-			str
-			.toUpperCase()
-			.normalize("NFD")
-			.replace(/[\u0300-\u036f]/g, "")
-		);
-
-		return normalized;
-	};
 	const normalizedSearch = normalize(search);
 
 	return (
@@ -119,45 +116,30 @@ export default function Cterm() {
 				<div className='flex flex-col lg:flex-row px-5 md:px-10 py-2 sm:py-4 md:py-5 my-5 bg-(--bg-dark) rounded-xl'>
 					<div className="flex flex-col min-w-[50%] ">
 						{/* C-term thing */}
-						<div className="px-2 py-2 md:py-4 pr-4">
-							<h1 className='font-bold text-xl'>Renderer</h1>
-						</div>
-						<div className='relative
-								p-1 sm:p-2 md:p-3 lg:p-4
-							w-full lg:w-[90%] bg-black rounded-2xl'
-						>
-							<p className="absolute top-[40%] left-0 right-0 mx-auto w-fit text-[5vw] font-bold">
-								PLACEHOLDER
-							</p>
-							<img
-								ref={imgRef}
-								className="mx-auto"
-								src={placeholderImg}
-							/>
-						</div>
+						<Title
+							title="Renderer"
+							classNameDiv="px-2 py-2 md:py-4 pr-4"
+						/>
+						<Renderer
+							imgRef={imgRef}
+							image={placeholderImg}
+						/>
 					</div>
 					<div
 						className={`flex flex-col w-full`}
 						style={{ maxHeight: windowWidth >= 1024 ? imgHeight : undefined}}
 					>
-						<div className="px-2 py-2 md:py-4">
-							<h1 className='font-bold text-xl'>Downloaded assets</h1>
-						</div>
+						<Title
+							title="Downloaded Assets"
+							classNameDiv="px-2 py-2 md:py-4"
+						/>
 						{downloadedAssets.length
 							? <AssetList
 								assets={downloadedAssets}
-								favoriteAssets={null}
-								selectedAsset={null}
-								filterType={null}
-								filterCategory={null}
-								types={null}
-								normalizedSearch={null}
 								theThingYknow={true}
 								onClick={handleDeleteAsset}
-								onClose={null}
-								onFavorite={null}
-								onDownload={null}
 								isLoading={false}
+								limit={assets.length}
 							/>
 							: <div className="flex justify-center px-4 py-2 md:py-4">
 								<h1 className="text-(--fg-dark) text-md">no downloaded assets..</h1>
@@ -166,10 +148,11 @@ export default function Cterm() {
 					</div>
 				</div>
 				<div className='flex flex-col md:flex-row px-2 md:px-4 py-2 md:py-4 gap-2 sm:gap-4 md:gap-5 bg-(--bg-dark) rounded-xl'>
-					<div className='flex flex-col w-full md:w-[50%] gap-2 md:gap-4 p-2 md:p-4 md:border-r-2 md:border-(--color1)'>
-						<div className="border-b border-(--color2)">
-							<h2 className="font-bold text-xl">Search</h2>
-						</div>
+					<div className='flex flex-col w-full md:w-[50%] gap-2 md:gap-4 p-2 md:p-4 md:border-r-2 md:border-(--color2)'>
+						<Title
+							title="Search"
+							classNameDiv="border-b border-(--color2)"
+						/>
 						<div>
 							<input
                                					 value={search}
@@ -195,8 +178,8 @@ export default function Cterm() {
 									}
 									{isLoadingTypes
 										? <option value="all">Loading...</option>
-										: types.map((type, index) => 
-											<option key={index} value={type}>{type}</option>
+										: types.map((type) => 
+											<option key={type} value={type}>{type}</option>
 										)
 									}
 								</select>
@@ -213,8 +196,8 @@ export default function Cterm() {
 										<option value='all'>Select a type first</option>
 									)}
 									{filterType && (
-									categories[filterType].map((category, index) => 
-										   <option key={index} value={category}>{category}</option>
+									categories[filterType].map((category) => 
+										   <option key={category} value={category}>{category}</option>
 									))}
 								</select>
 							</div>
@@ -238,9 +221,20 @@ export default function Cterm() {
 						onClose={setSelectedAsset}
 						onFavorite={handleFavoriteAsset}
 						onDownload={handleDownloadAsset}
-						normalize={normalize}
 						isLoading={isLoadingAssets}
+						limit={loadedAssets}
 					/>
+					<div className="flex justify-center w-full pt-5">
+						<button
+							className="text-xl font-bold cursor-pointer border rounded-md px-20 py-5"
+							onClick={(e) => {
+								e.stopPropagation();
+								setLoadedAssets(loadedAssets + initLoadedAssets)
+							}}
+						>
+							Load more
+						</button>
+					</div>
 				</div>
 			</main>
 		</div>
@@ -249,46 +243,56 @@ export default function Cterm() {
 
 function AssetList(
 	{
-		assets, favoriteAssets, selectedAsset,
+		assets,
+		favoriteAssets,
+		selectedAsset,
 		types,
-		filterType, filterCategory,
-		normalizedSearch, theThingYknow,
-		onClick, onClose, onFavorite, onDownload, normalize,
-		isLoading
+		filterType,
+		filterCategory,
+		normalizedSearch,
+		theThingYknow,
+		onClick,
+		onClose,
+		onFavorite,
+		onDownload,
+		isLoading,
+		limit,
 	}) {
+
+	let index = 0;
 
 	return (
 		<div className={`${theThingYknow
 			? 'overflow-x-scroll flex lg:overflow-y-scroll lg:grid lg:grid-cols-[repeat(auto-fit,minmax(100px,1fr))] xl:grid-cols-[repeat(auto-fit,minmax(150px,1fr))]'
 			: 'grid grid-cols-[repeat(auto-fit,minmax(150px,auto))] md:grid-cols-[repeat(auto-fit,minmax(200px,1fr))] xl:grid-cols-[repeat(auto-fit,minmax(300px,auto))]'
-		} gap-2 sm:gap-4 md:gap-5`}
+			} "gap-2 sm:gap-4 md:gap-5"`}
 		>
 			{isLoading
-				? <div className="flex justify-center h-20">
-					<h1 className="text-(--fg-dark) font-bold text-xl">Loading...</h1>
-				</div>
-				:	assets.map((asset, index) => 
-				(!normalizedSearch ||
-                       			normalize(asset.name).includes(normalizedSearch)
-				) && (!filterType ||
-					filterType == types[asset.type]
-				) && (!filterCategory ||
-					asset.categories.find((category) => category == filterCategory)
-				) && (<Asset
-					key={index}
-					asset={asset}
-					isSelected={index == selectedAsset ? true : false}
-					isFavorited={favoriteAssets != null
-						? favoriteAssets.find((fAsset) => fAsset == index) != null ? true : false
-						: false
-					}
-					index={index}
-					onClick={onClick}
-					onClose={onClose}
-					onFavorite={onFavorite}
-					onDownload={onDownload}
-					theThingYknow={theThingYknow}
-				/>))
+				? <Title
+					title="Loading..."
+					classNameTitle="text-(--fg-dark)"
+					classNameDiv="flex justify-center pb-10 animate-pulse"
+				/>
+				: assets.map((asset) => 
+					(checkAsset(asset, index, types, filterType, filterCategory, normalizedSearch, limit)
+					) && (
+					index += 1
+					) && (
+					<Asset
+						key={index}
+						asset={asset}
+						isSelected={asset.name == selectedAsset}
+						isFavorited={favoriteAssets != null
+							? favoriteAssets.find((fAsset) => fAsset == asset.name) != null
+							: false
+						}
+						onClick={onClick}
+						onClose={onClose}
+						onFavorite={onFavorite}
+						onDownload={onDownload}
+						theThingYknow={theThingYknow}
+					/>)
+				)
 			}
 		</div>
 	);
@@ -297,32 +301,48 @@ function AssetList(
 function Asset(
 	{
 		asset,
-		isSelected, isFavorited,
-		index,
-		onClick, onClose, onFavorite, onDownload,
+		isSelected,
+		isFavorited,
+		onClick,
+		onClose,
+		onFavorite,
+		onDownload,
 		theThingYknow
 	}) {
 
+	const { scrollY } = useScroll()
+	const [scrollDirection, setScrollDirection] = useState("down")
+
+	useMotionValueEvent(scrollY, "change", (current) => {
+		const diff = current - scrollY.getPrevious()
+		setScrollDirection(diff > 0 ? "down" : "up")
+	})
+
 	return (
-		(!isSelected
+		<AnimatePresence>
+		{!isSelected
 		? (
-		<div
-			className={`flex flex-col relative
-			${isSelected
-				? 'bg-(--bg-dark) border-2 md:border-4'
-				: 'bg-(--bg-dark) border-1 md:border-2 hover:bg-(--bg-darker) hover:border-(--color1)'
-			}
+		<motion.div
+			initial={{ opacity: 0.1, translateY: 0 }}
+			whileInView={{ opacity: 1.0, translateY: scrollDirection == "down" ? -40 : 10 }}
+			whileHover={{ background: "var(--bg-lighter)", boxShadow: "0 0 2px 2px var(--color1)" }}
+			transition={{
+				opacity: { duration: 0.5 },
+				translateY: { duration: 0.5 },
+				boxShadow: { duration: 0.3, ease: "easeOut" },
+				background: {duration: 0.3, ease: "easeOut"} }}
+			className={`flex flex-col relative bg-(--bg-dark) rounded-xl min-w-0
 			${theThingYknow
 				? 'text-xs'
 				: 'text-sm lg:text-base'
-			} border-(--color2) rounded-xl transition-all md:min-w-20 lg:min-w-0`}
+			}`}
                         onClick={theThingYknow
 				? (e) => {
 					e.stopPropagation();
 					onClick(asset);}
 				: (e) => {
 					e.stopPropagation();
-					onClick(index);
+					onClick(asset.name);
 				}
 			}
 		>
@@ -340,29 +360,36 @@ function Asset(
 					: null
 				}
 			</div>
-		</div>
+		</motion.div>
 		) : (
-		<div className="overflow-y-scroll max-h-[500px] col-span-full bg-(--color-1) rounded-xl p-2 md:p-5 lg:p-10 border-1 md:border-3 border-(--color3)">
+		<motion.div
+			className="overflow-y-scroll max-h-[500px] col-span-full bg-(--color-1) rounded-xl p-2 md:p-5 lg:p-10 border md:border-2 border-(--color1)"
+			transition={{ duration: 0.3, ease: "easeInOut" }}
+			initial={{ opacity: 0, scale: 0 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0 }}
+			key="box"
+		>
 			<div className="flex justify-between pb-4">
 				<div className="flex flex-col sm:flex-row gap-1 md:gap-2">
 					<button
 						className="bg-(--bg-darker) hover:bg-(--color2) active:bg-(--color3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 rounded-lg cursor-pointer border-1 border-(--bg-light)"
                         			onClick={(e) => {
 							e.stopPropagation();
-							onFavorite(index);
+							onFavorite(asset.name);
 						}}
 					>
-					<span className="text-blue-300">♥</span> Favorite
+						<span className="text-blue-300">♥</span> Favorite
 					</button>
 
 					<button
 						className="bg-(--bg-darker) hover:bg-(--color2) active:bg-(--color3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 rounded-lg cursor-pointer border-1 border-(--bg-light)"
                         			onClick={(e) => {
 							e.stopPropagation();
-							onDownload(index);
+							onDownload(asset);
 						}}
 					>
-					<span className="text-green-300">↓</span> Download
+						<span className="text-green-300">↓</span> Download
 					</button>
 
 				</div>
@@ -374,12 +401,12 @@ function Asset(
 							onClose(null);
 						}}
 					>
-					<span className="text-red-400">X</span> Close
+						<span className="text-red-400">X</span> Close
 					</button>
 				</div>
 			</div>
 			<div className="flex flex-col md:flex-row">
-				<div className="flex flex-col md:border-r border-(--color1) px-2 md:px-0 md:pr-8 w-full md:max-w-[50%]">
+				<div className="flex flex-col md:border-r border-(--color2) px-2 md:px-0 md:pr-8 w-full md:max-w-[50%]">
 					<h1 className='font-bold text-2xl md:text-3xl'>{asset.name}</h1>
 					<div className="relative w-full md:w-[50%] lg:w-full">
 						<img
@@ -403,12 +430,12 @@ function Asset(
 						<h2 className="font-bold text-lg pb-2">Authors</h2>
 						<div className="flex flex-wrap gap-x-2 gap-y-1">
 							<div className="flex flex-col">
-								{Object.keys(asset.authors).map((author, index) => 
-								<p key={index}>{author}: </p>)}
+								{Object.keys(asset.authors).map((author) => 
+								<p key={author}>{author}: </p>)}
 							</div>
 							<div className="flex flex-col">
-								{Object.values(asset.authors).map((work, index) => 
-								<p key={index}>{work}</p>)}
+								{Object.values(asset.authors).map((work) => 
+								<p key={work}>{work}</p>)}
 							</div>
 						</div>
 
@@ -422,21 +449,22 @@ function Asset(
 					<div className="pb-2 pt-5 border-b border-(--color2)">
 						<h2 className="font-bold text-lg pb-2">Categories</h2>
 						<div className="flex flex-wrap gap-x-2 gap-y-1">
-							{asset.categories.map((category, index) =>
-							<p key={index}>{category},</p>)}
+							{asset.categories.map((category) =>
+							<p key={category}>{category},</p>)}
 						</div>
 					</div>
 					<div className="pb-2 pt-5">
 						<h2 className="font-bold text-lg pb-2">Tags</h2>
 						<div className="flex flex-wrap gap-x-2 gap-y-1">
-							{asset.tags.map((tag, index)=>
-							<p key={index}>{tag},</p>)}
+							{asset.tags.map((tag)=>
+							<p key={tag}>{tag},</p>)}
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-		))
+		</motion.div>
+		)};
+		</AnimatePresence>
 	);
 }
 
