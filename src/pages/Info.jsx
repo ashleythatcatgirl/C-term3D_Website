@@ -4,15 +4,15 @@ import { Header } from "../components/Header.jsx";
 export default function Info() {
 
 	return (
-		<div className='flex flex-col min-h-dvh min-w-dvw text-(--fg-normal) bg-(--bg-normal)'>
+		<div className='flex flex-col min-h-dvh min-w-dvw text-(--fg) bg-(--bg)'>
 			<Header
 				title="Info"
 			/>
-			<main className='flex mx-2 sm:mx-5 md:mx-10 lg:mx-20 gap-2'>
-				<div className='flex flex-col lg:flex-row w-full px-5 md:px-10 py-2 gap-5 sm:py-4 md:py-5 my-5 bg-(--bg-dark) rounded-xl'>
-					<div className="flex flex-col px-2 md:px-4 py-4 bg-(--bg-darker) md:w-[60%] rounded-xl">
-						<div className="border-b-2 border-(--color3)">
-							<h1 className='font-bold text-2xl px-2'>About this webpage</h1>
+			<main className='flex px-[170px]'>
+				<div className='flex flex-col lg:flex-row w-full gap-5 py-2 sm:py-4 md:py-5 bg-(--bg) rounded-xl'>
+					<div className="flex flex-col px-[100px] py-4 md:w-[60%] rounded-xl">
+						<div className="border-b-2 border-(--accent2)">
+							<h1 className='font-bold text-2xl'>About this webpage</h1>
 						</div>
 						<div className="flex flex-col gap-4 px-2 sm:px-4 md:px-8 py-4">
 							<div className="pb-4">
@@ -43,8 +43,8 @@ export default function Info() {
 							</div>
 						</div>
 					</div>
-					<div className="flex flex-col px-4 py-4 bg-(--bg-darker) md:w-[50%] rounded-xl">
-						<div className="border-b-2 border-(--color3)">
+					<div className="flex flex-col px-4 py-4 md:w-[50%] rounded-xl">
+						<div className="border-b-2 border-(--accent2)">
 							<h1 className='font-bold text-2xl px-2'>Links</h1>
 						</div>
 						<div className="px-2 sm:px-4 md:px-8 py-4">
@@ -53,14 +53,14 @@ export default function Info() {
 									<h2 className="font-bold text-xl">Github</h2>
 								</div>
 								<div className="px-4">
-									<p className="italic text-(--fg-light) hover:text-lg transition-all hover:text-(--color1)">
+									<p className="italic text-(--fg) hover:text-lg transition-all hover:text-(--accent1)">
 									<a href="https://github.com/ashleythatcatgirl/C-term3D_Website">
 										{'Website -->'}
 									</a>
 									</p>
 								</div>
 								<div className="px-4">
-									<p className="italic text-(--fg-light) hover:text-lg transition-all hover:text-(--color1)">
+									<p className="italic text-(--fg) hover:text-lg transition-all hover:text-(--accent1)">
 									<a href="https://github.com/ashleythatcatgirl/C-term3D">
 										{'C-term3D -->'}
 									</a>

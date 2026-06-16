@@ -8,30 +8,30 @@ export function Header({
 }) {
 
 	return(
-		<header className='flex h-15 sm:h-18 md:h-20 rounded-b-sm justify-between items-center bg-(--bg-dark) border-b-2 border-(--color1)'>
+		<header className='flex px-[170px] h-15 sm:h-18 md:h-20 rounded-b-sm justify-between items-center bg-(--bg) border-b-2 border-(--accent1)'>
 			<Title
 				title={title}
-				classNameDiv="pl-5 sm:px-10 md:px-16 lg:px-30 py-2"
-				classNameTitle="text-3xl"
+				classNameDiv="py-2 w-[280px]"
+				classNameTitle="text-3xl tracking-[2px]"
 			/>
-			<div className='flex flex-row gap-3 pr-5 sm:px-10 md:px-16 lg:px-30 py-2'>
+			<div className='flex flex-row gap-[20px] py-2'>
 				<PageLink
 					page={title}
 					title="Home"
 					link="/"
-					className="bg-(--bg-darker) active:bg-(--bg-lighter)"
+					className="w-[80px] bg-(--bg) active:bg-(--bg)"
 				/>
 				<PageLink
 					page={title}
 					title="Info"
 					link="/info"
-					className="bg-(--bg-darker) active:bg-(--bg-lighter)"
+					className="w-[80px] bg-(--bg) active:bg-(--bg)"
 				/>
 				<PageLink
 					page={title}
-					title="Cterm3D"
-					link="/cterm3D"
-					className="bg-(--color2) active:bg-(--color1) active:opacity-80"
+					title="Cterm"
+					link="/cterm"
+					className="w-[80px] bg-(--accent2) active:bg-(--accent1) active:opacity-80"
 				/>
 			</div>
 		</header>
@@ -57,14 +57,14 @@ function PageLink({
 				className={cn(
 					className,
 					(upperTitle == upperPage
-						? "border-(--color1)"
-						: ""
+						? "border border-(--accent1)"
+						: "border border-(--accent2)"
 					),
 					(upperTitle == upperPage && upperPage == "CTERM3D"
-						? "bg-(--color1) text-(--bg-dark)"
+						? "bg-(--accent1) text-(--bg)"
 						: ""
 					),
-					`active:scale-110 hover:scale-105 duration-100 ease-in-out transition-all px-4 py-2 rounded-md cursor-pointer border`
+					`active:scale-110 hover:scale-105 duration-100 ease-in-out transition-all px-1 py-2 rounded-md cursor-pointer`
 				)}
 			>
 				{title}

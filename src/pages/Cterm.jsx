@@ -8,16 +8,16 @@ import { Title } from "../components/Title.jsx";
 import { Renderer } from "../components/Renderer.jsx";
 
 import { useWindowDimensions } from "../hooks/useWindowDimensions.js";
+import { useImgHeight } from "../hooks/useImgHeight.js";
 import { useAssets } from "../hooks/useAssets.js";
 import { useTypes } from "../hooks/useTypes.js";
 import { useCategories } from "../hooks/useCategories";
-
-const placeholderImg = "/ctermplaceholder.png"
 
 const initLoadedAssets = 50;
 
 export default function Cterm() {
 	const { width: windowWidth, height: windowHeight} = useWindowDimensions();
+	const { imgRef, imgHeight } = useImgHeight();
 
 	const { assets, isLoadingAssets } = useAssets();
 	const { types, isLoadingTypes } = useTypes();
@@ -35,18 +35,6 @@ export default function Cterm() {
 
 	const [selectedAsset, setSelectedAsset] = useState();
 	const [loadedAssets, setLoadedAssets] = useState(initLoadedAssets);
-
-	const imgRef = useRef();
-	const [imgHeight, setImgHeight] = useState(0);
-
-	useEffect(() => {
-		const updateHeight = () => {
-        		setImgHeight((imgRef.current?.offsetHeight ?? 0) + 90);
-		};
-		
-		updateHeight();
-		window.addEventListener("resize", updateHeight);
-	}, []);
 
 	const handleFavoriteAsset = (assetName) => {
 		let newFavorites = [];
@@ -96,9 +84,10 @@ export default function Cterm() {
 	};
 
 	const handleDeleteAsset = (asset) => {
-		const newDownloads = downloadedAssets.filter((dAsset) => dAsset != asset);
+		//TODO: Fix clicking on model, deleting all models with the same name
+		// probably gonna use an index tbh
+		const newDownloads = downloadedAssets.filter((dAsset) => dAsset.name != asset.name);
 
-		console.log(newDownloads);
 		toast.info("Deleted asset");
 
 		setDownloadedAssets(newDownloads);
@@ -107,22 +96,23 @@ export default function Cterm() {
 
 	const normalizedSearch = normalize(search);
 
+	console.log(imgHeight);
+	
 	return (
-		<div className='flex flex-col min-h-dvh min-w-dvw text-(--fg-normal) bg-(--bg-normal)'>
+		<div className='flex flex-col min-h-dvh min-w-dvw text-(--fg) bg-(--bg)'>
 			<Header
 				title="Cterm3D"
 			/>
-			<main className='flex flex-col mx-2 sm:mx-5 md:mx-10 lg:mx-30 gap-2'>
-				<div className='flex flex-col lg:flex-row px-5 md:px-10 py-2 sm:py-4 md:py-5 my-5 bg-(--bg-dark) rounded-xl'>
-					<div className="flex flex-col min-w-[50%] ">
+			<main className='flex flex-col px-[170px]'>
+				<div className='flex flex-col px-[100px] lg:flex-row py-2 sm:py-4 md:py-5 gap-5 rounded-xl'>
+					<div className="flex flex-col min-w-[61%]">
 						{/* C-term thing */}
 						<Title
 							title="Renderer"
-							classNameDiv="px-2 py-2 md:py-4 pr-4"
+							classNameDiv="py-2 md:py-4"
 						/>
 						<Renderer
 							imgRef={imgRef}
-							image={placeholderImg}
 						/>
 					</div>
 					<div
@@ -131,7 +121,8 @@ export default function Cterm() {
 					>
 						<Title
 							title="Downloaded Assets"
-							classNameDiv="px-2 py-2 md:py-4"
+							classNameTitle="text-right"
+							classNameDiv="py-2 md:py-4"
 						/>
 						{downloadedAssets.length
 							? <AssetList
@@ -141,35 +132,35 @@ export default function Cterm() {
 								isLoading={false}
 								limit={assets.length}
 							/>
-							: <div className="flex justify-center px-4 py-2 md:py-4">
-								<h1 className="text-(--fg-dark) text-md">no downloaded assets..</h1>
+							: <div className="flex justify-center py-2 md:py-4">
+								<h1 className="text-(--fg)/75 text-md">no downloaded assets..</h1>
 							</div>
 						}
 					</div>
 				</div>
-				<div className='flex flex-col md:flex-row px-2 md:px-4 py-2 md:py-4 gap-2 sm:gap-4 md:gap-5 bg-(--bg-dark) rounded-xl'>
-					<div className='flex flex-col w-full md:w-[50%] gap-2 md:gap-4 p-2 md:p-4 md:border-r-2 md:border-(--color2)'>
+				<div className='flex flex-col md:flex-row py-2 md:py-4 gap-2 sm:gap-4 md:gap-5 rounded-xl'>
+					<div className='flex flex-col w-full md:w-[50%] gap-2 md:gap-4 pr-5 md:border-r-2 md:border-(--accent2)'>
 						<Title
 							title="Search"
-							classNameDiv="border-b border-(--color2)"
+							classNameDiv="border-b border-(--accent2)"
 						/>
 						<div>
 							<input
                                					 value={search}
 				                                onChange={(e) => setSearch(e.target.value)}
-								className="outline-0 focus:border-(--color1) focus:border-2 w-full p-2 bg-(--bg-normal) border-1 border-(--color2) rounded-lg text-(--fg-dark) "
+								className="outline-0 focus:border-(--accent1) focus:border-2 w-full p-2 border-1 border-(--accent2) rounded-lg text-(--fg) "
 							/>
 						</div>
 					</div>
-					<div className='flex flex-col w-full md:w-[50%] gap-2 md:gap-4 p-2 md:p-4'>
-						<div className="border-b border-(--color2)">
+					<div className='flex flex-col w-full md:w-[50%] gap-2 md:gap-4'>
+						<div className="border-b border-(--accent2)">
 							<h2 className="font-bold text-xl">Filter</h2>
 						</div>
 						<div className="flex flex-col sm:flex-row gap-4 justify-around">
 							<div className="flex gap-5 items-center">
 								<h2 className="font-bold text-md lg:text-lg">Type</h2>
 								<select
-									className="w-full p-2 bg-(--bg-normal) text-(--fg-dark) border-1 border-(--color2) focus:border-(--color1) focus:border-2 rounded-lg cursor-pointer"
+									className="w-full p-2 text-(--fg)/75 border-1 border-(--accent2) focus:border-(--accent1) focus:border-2 rounded-lg"
 									value={filterType ? filterType : 'all'}
                                 					onChange={(e) => handleFilterType(e.target.value)}
 								>
@@ -187,7 +178,7 @@ export default function Cterm() {
 							<div className="flex gap-5 items-center">
 								<h2 className="font-bold text-md lg:text-lg">Category</h2>
 								<select
-									className="w-full p-2 bg-(--bg-normal) text-(--fg-dark) border-1 border-(--color2) focus:border-(--color1) focus:border-2 rounded-lg cursor-pointer disabled:cursor-default"
+									className="w-full p-2 text-(--fg)/75 border-1 border-(--accent2) focus:border-(--accent1) focus:border-2 rounded-lg disabled:cursor-default"
 									value={filterCategory ? filterCategory : 'all'}
                                 					onChange={(e) => handleFilterCategory(e.target.value)}
 									disabled={filterType ? false : true}
@@ -204,7 +195,7 @@ export default function Cterm() {
 						</div>
 					</div>
 				</div>
-				<div className='flex flex-col px-5 my-5 bg-(--bg-dark) rounded-xl'>
+				<div className='flex flex-col px-[100px] rounded-xl'>
 					<div className='px-2 py-2 md:py-4'>
 						<h2 className="font-bold text-xl">Assets</h2>
 					</div>
@@ -226,7 +217,7 @@ export default function Cterm() {
 					/>
 					<div className="flex justify-center w-full pt-5">
 						<button
-							className="text-xl font-bold cursor-pointer border rounded-md px-20 py-5"
+							className="text-xl font-bold border rounded-md px-20 py-5"
 							onClick={(e) => {
 								e.stopPropagation();
 								setLoadedAssets(loadedAssets + initLoadedAssets)
@@ -263,14 +254,14 @@ function AssetList(
 
 	return (
 		<div className={`${theThingYknow
-			? 'overflow-x-scroll flex lg:overflow-y-scroll lg:grid lg:grid-cols-[repeat(auto-fit,minmax(100px,1fr))] xl:grid-cols-[repeat(auto-fit,minmax(150px,1fr))]'
-			: 'grid grid-cols-[repeat(auto-fit,minmax(150px,auto))] md:grid-cols-[repeat(auto-fit,minmax(200px,1fr))] xl:grid-cols-[repeat(auto-fit,minmax(300px,auto))]'
+			? 'overflow-x-scroll flex lg:overflow-y-scroll lg:grid lg:grid-cols-[repeat(auto-fit,minmax(50px,1fr))] xl:grid-cols-[repeat(auto-fit,minmax(100px,1fr))]'
+			: 'grid grid-cols-[repeat(auto-fit,minmax(150px,auto))] md:grid-cols-[repeat(auto-fit,minmax(200px,auto))] xl:grid-cols-[repeat(auto-fit,minmax(300px,auto))]'
 			} "gap-2 sm:gap-4 md:gap-5"`}
 		>
 			{isLoading
 				? <Title
 					title="Loading..."
-					classNameTitle="text-(--fg-dark)"
+					classNameTitle="text-(--fg)"
 					classNameDiv="flex justify-center pb-10 animate-pulse"
 				/>
 				: assets.map((asset) => 
@@ -324,14 +315,14 @@ function Asset(
 		? (
 		<motion.div
 			initial={{ opacity: 0.1, translateY: 0 }}
-			whileInView={{ opacity: 1.0, translateY: scrollDirection == "down" ? -40 : 10 }}
-			whileHover={{ background: "var(--bg-lighter)", boxShadow: "0 0 2px 2px var(--color1)" }}
+			whileInView={{ opacity: 1.0, translateY: scrollDirection == "down" ? -10 : 10 }}
+			whileHover={{ background: "var(--bg)", boxShadow: "0 0 2px 2px var(--accent1) inset" }}
 			transition={{
-				opacity: { duration: 0.5 },
-				translateY: { duration: 0.5 },
+				opacity: { duration: theThingYknow ? 0.2 : 0.5 },
+				translateY: { duration: theThingYknow ? 0.2 : 0.5 },
 				boxShadow: { duration: 0.3, ease: "easeOut" },
 				background: {duration: 0.3, ease: "easeOut"} }}
-			className={`flex flex-col relative bg-(--bg-dark) rounded-xl min-w-0
+			className={`flex flex-col relative bg-(--bg) rounded-xl min-w-0
 			${theThingYknow
 				? 'text-xs'
 				: 'text-sm lg:text-base'
@@ -363,17 +354,23 @@ function Asset(
 		</motion.div>
 		) : (
 		<motion.div
-			className="overflow-y-scroll max-h-[500px] col-span-full bg-(--color-1) rounded-xl p-2 md:p-5 lg:p-10 border md:border-2 border-(--color1)"
-			transition={{ duration: 0.3, ease: "easeInOut" }}
-			initial={{ opacity: 0, scale: 0 }}
-                        animate={{ opacity: 1, scale: 1 }}
+			className="overflow-y-scroll max-h-[500px] col-span-full rounded-xl p-2 md:p-5 lg:p-10 border md:border-2 border-(--accent1)"
+			transition={{
+				duration: 0.3, ease: "easeInOut",
+				opacity: { duration: 0.5 },
+				translateY: { duration: 0.5 },
+			}}
+			whileInView={{ opacity: 1.0, translateY: scrollDirection == "down" ? -10 : 10 }}
+			onLostPointerCaptureCaptu
+			initial={{ opacity: 0, scale: 0, translateY: 0 }}
+                        animate={{ opacity: 1.0, scale: 1 }}
                         exit={{ opacity: 0, scale: 0 }}
 			key="box"
 		>
 			<div className="flex justify-between pb-4">
 				<div className="flex flex-col sm:flex-row gap-1 md:gap-2">
 					<button
-						className="bg-(--bg-darker) hover:bg-(--color2) active:bg-(--color3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 rounded-lg cursor-pointer border-1 border-(--bg-light)"
+						className="hover:bg-(--accent2) active:bg-(--accent3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 rounded-lg border-1 border-(--accent2)"
                         			onClick={(e) => {
 							e.stopPropagation();
 							onFavorite(asset.name);
@@ -383,7 +380,7 @@ function Asset(
 					</button>
 
 					<button
-						className="bg-(--bg-darker) hover:bg-(--color2) active:bg-(--color3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 rounded-lg cursor-pointer border-1 border-(--bg-light)"
+						className="hover:bg-(--accent2) active:bg-(--accent3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 rounded-lg border-1 border-(--accent2)"
                         			onClick={(e) => {
 							e.stopPropagation();
 							onDownload(asset);
@@ -395,7 +392,7 @@ function Asset(
 				</div>
 				<div>
 					<button
-						className="bg-(--bg-darker) hover:bg-(--color2) active:bg-(--color3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 rounded-lg cursor-pointer border-1 border-(--bg-light)"
+						className="hover:bg-(--accent2) active:bg-(--accent3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 rounded-lg border-1 border-(--accent2)"
 						onClick={(e) => {
 							e.stopPropagation();
 							onClose(null);
@@ -406,7 +403,7 @@ function Asset(
 				</div>
 			</div>
 			<div className="flex flex-col md:flex-row">
-				<div className="flex flex-col md:border-r border-(--color2) px-2 md:px-0 md:pr-8 w-full md:max-w-[50%]">
+				<div className="flex flex-col md:border-r border-(--accent2) px-2 md:px-0 md:pr-8 w-full md:max-w-[50%]">
 					<h1 className='font-bold text-2xl md:text-3xl'>{asset.name}</h1>
 					<div className="relative w-full md:w-[50%] lg:w-full">
 						<img
@@ -420,13 +417,13 @@ function Asset(
 							}
 						</div>
 					</div>
-					<div className="pb-2 border-b md:pb-0 md:border-0 border-(--color2)">
+					<div className="pb-2 border-b md:pb-0 md:border-0 border-(--accent2)">
 						<h2 className="font-bold text-lg pb-2">Description</h2>
 						<p className="text-justify">{asset.description}</p>
 					</div>
 				</div>
 				<div className="pl-2 md:pl-8">
-					<div className="pb-2 pt-5 md:pt-0 border-b border-(--color2)">
+					<div className="pb-2 pt-5 md:pt-0 border-b border-(--accent2)">
 						<h2 className="font-bold text-lg pb-2">Authors</h2>
 						<div className="flex flex-wrap gap-x-2 gap-y-1">
 							<div className="flex flex-col">
@@ -440,13 +437,13 @@ function Asset(
 						</div>
 
 					</div>
-					<div className="pb-2 pt-5 border-b border-(--color2)">
+					<div className="pb-2 pt-5 border-b border-(--accent2)">
 						<h2 className="font-bold text-lg pb-2">Date published</h2>
 						<div className="flex">
 							<p>{Date(asset.date_published * 1000).replace(/\(.*\)/g, "")}</p>
 						</div>
 					</div>
-					<div className="pb-2 pt-5 border-b border-(--color2)">
+					<div className="pb-2 pt-5 border-b border-(--accent2)">
 						<h2 className="font-bold text-lg pb-2">Categories</h2>
 						<div className="flex flex-wrap gap-x-2 gap-y-1">
 							{asset.categories.map((category) =>
@@ -463,7 +460,7 @@ function Asset(
 				</div>
 			</div>
 		</motion.div>
-		)};
+		)}
 		</AnimatePresence>
 	);
 }
