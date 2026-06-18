@@ -17,7 +17,7 @@ export function useImgHeight() {
 		setTimeout(() => {
 	
 			updateHeight(imgRef);
-		}, 0.1);
+		}, 0.5);
 
 		window.addEventListener("resize", updateHeight(imgRef));
 		return () => window.removeEventListener('resize', updateHeight(imgRef));

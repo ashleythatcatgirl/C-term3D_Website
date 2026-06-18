@@ -6,24 +6,15 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@keyframes fade-in-bottom {
-	0% {
-		opacity: 0;
-		transform: translateY(20px);
-	}
-	100% {
-		opacity: 1;
-		transform: translateY(0);
-	}
-}
-
 :root {
 	--bg: #111015;
+	--bg-alt: #0d0c12;
 	--fg: #dbd4df;
+	--fg-alt: #dbd4df;
 
-	--accent1: #8D6BB0;
-	--accent2: #62426A;
-	--accent3: #C88EC0;
+	--accent1: #9D83BF;
+	--accent2: #846CC8;
+	--accent3: #D9BF68;
 
 	--background: var(--bg);
 	--foreground: var(--fg);
@@ -57,8 +48,6 @@
 	--sidebar-accent-foreground: oklch(0.205 0 0);
 	--sidebar-border: var(--accent1);
 	--sidebar-ring: var(--accent1);
-
-
 }
 
 * {
@@ -113,10 +102,6 @@ body {
 	--radius-2xl: calc(var(--radius) * 1.8);
 	--radius-3xl: calc(var(--radius) * 2.2);
 	--radius-4xl: calc(var(--radius) * 2.6);
-}
-
-@theme {
-
 }
 
 .dark {
