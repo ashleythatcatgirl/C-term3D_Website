@@ -7,6 +7,7 @@ import { Header } from "../components/Header.jsx";
 import { Title } from "../components/Title.jsx";
 import { AssetList, Asset } from "../components/Assets.jsx";
 
+import { useWindowDimensions } from "../hooks/useWindowDimensions.js";
 import { useAssets } from "../hooks/useAssets.js";
 import { useTypes } from "../hooks/useTypes.js";
 import { useCategories } from "../hooks/useCategories";
@@ -14,6 +15,7 @@ import { useCategories } from "../hooks/useCategories";
 const initLoadedAssets = 50;
 
 export default function Cterm() {
+	const { width: windowWidth, height: windowHeight} = useWindowDimensions();
 	const { assets, isLoadingAssets } = useAssets();
 	const { types, isLoadingTypes } = useTypes();
 	const { categories, isLoadingCategories } = useCategories();
@@ -30,6 +32,8 @@ export default function Cterm() {
 
 	const [selectedAsset, setSelectedAsset] = useState();
 	const [loadedAssets, setLoadedAssets] = useState(initLoadedAssets);
+
+	const [isMenuOpen, setIsMenuOpen] = useState();
 
 	const handleFavoriteAsset = (assetName) => {
 		let newFavorites = [];
@@ -85,6 +89,9 @@ export default function Cterm() {
 		<div className='flex flex-col min-h-dvh min-w-dvw text-(--fg) bg-(--bg) text-sm'>
 			<Header
 				title="Library"
+				windowWidth={windowWidth}
+				isMenuOpen={isMenuOpen}
+				onOpen={setIsMenuOpen}
 			/>
 			<main className='flex flex-col px-[20px] md:px-[90px] xl:px-[170px]'>
 				<div className='flex flex-col px-[40px] md:px-[120px] xl:px-[200px] lg:flex-row py-[20px] rounded-xl'>

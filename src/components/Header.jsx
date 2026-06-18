@@ -7,16 +7,42 @@ import { Title } from "./Title.jsx";
 
 export function Header({
 	title,
+	windowWidth,
+	isMenuOpen,
+	onOpen,
 }) {
 
+	console.log(windowWidth);
+	
 	return(
 		<header className='flex px-[20px] md:px-[90px] xl:px-[170px] py-[10px] rounded-b-sm justify-between items-center bg-(--bg-alt) border-b border-(--accent2)'>
 			<Title
 				title={title}
-				classNameDiv="py-2 w-[280px]"
+				classNameDiv="py-2"
 				classNameTitle="text-3xl tracking-[2px]"
 			/>
-			<div className='flex flex-wrap flex-row gap-[20px] py-2 justify-end'>
+			{windowWidth < 768
+				?
+				<div className="">
+					<button
+						className={`active:scale-110 hover:scale-105 duration-100 ease-in-out transition-all px-1 py-2 rounded-md font-bold
+							${isMenuOpen
+								? "shadow-[0_1px_4px_0px_var(--accent2)]"
+								: "shadow-[0_1px_4px_0px_var(--accent1)]"}
+						`}
+						onClick={(e) => {
+							e.stopPropagation();
+							onOpen(!isMenuOpen);
+						}}
+					>
+						Open menu
+					</button>
+				</div>
+				: null
+			}
+			{isMenuOpen || windowWidth > 768
+				?
+			<div className='absolute md:static px-[10px] py-[10px] rounded-md right-[10px] top-[70px] flex flex-col bg-(--bg-alt) w-min md:flex-row gap-[20px] py-2 justify-end z-10'>
 				<PageLink
 					page={title}
 					title="Home"
@@ -42,6 +68,8 @@ export function Header({
 					className="w-[80px] bg-(--accent1) text-(--bg) active:opacity-80"
 				/>
 			</div>
+				: null
+			}
 		</header>
 	);
 }

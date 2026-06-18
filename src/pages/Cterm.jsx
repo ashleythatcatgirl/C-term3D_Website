@@ -22,6 +22,7 @@ export default function Cterm() {
 	const [downloadedAssets, setDownloadedAssets] = useState(initDownloads ? initDownloads : []);
 
 	const [isRendererOpen, setIsRendererOpen] = useState();
+	const [isMenuOpen, setIsMenuOpen] = useState();
 
 	const handleDeleteAsset = (asset) => {
 		//TODO: Fix clicking on model, deleting all models with the same name
@@ -38,6 +39,9 @@ export default function Cterm() {
 		<div className='flex flex-col min-h-dvh min-w-dvw text-sm text-(--fg) bg-(--bg)'>
 			<Header
 				title="Cterm3D"
+				windowWidth={windowWidth}
+				isMenuOpen={isMenuOpen}
+				onOpen={setIsMenuOpen}
 			/>
 			<main className='flex flex-col px-[20px] md:px-[90px] xl:px-[170px]'>
 				<div className='flex flex-col xl:flex-row px-[20px] md:px-[60px] xl:px-[100px] py-[20px] gap-[20px] rounded-xl'>
@@ -51,6 +55,8 @@ export default function Cterm() {
 							imgRef={imgRef}
 							isOpen={isRendererOpen}
 							onClick={setIsRendererOpen}
+
+
 						/>
 					</div>
 					<div

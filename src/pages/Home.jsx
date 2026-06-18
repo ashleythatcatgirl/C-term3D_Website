@@ -13,13 +13,17 @@ const images = [
 
 export default function Home() {
 	const { width: windowWidth, height: windowHeight} = useWindowDimensions();
+	const [isMenuOpen, setIsMenuOpen] = useState();
 
 	return (
 		<div className='flex flex-col min-h-dvh min-w-dvw text-(--fg) bg-(--bg) text-sm overflow-clip'>
 			<Header
 				title="Home"
+				windowWidth={windowWidth}
+				isMenuOpen={isMenuOpen}
+				onOpen={setIsMenuOpen}
 			/>
-			<main className='flex flex-col px-[50px] md:px-[90px] xl:px-[170px]'>
+			<main className='flex flex-col'>
 				{/*
 				<div className="flex justify-center absolute left-0 right-0 top-0 bottom-0 h-screen mx-auto my-auto bg-black">
 					<div className="absolute right-[20px] md:right-[40px] xl:right-[80px] flex gap-10 justify-end text-xl w-min py-2 px-[20px]">
@@ -39,8 +43,8 @@ export default function Home() {
 					/>
 				</div>
 				*/}
-				<div className="flex justify-center relative left-0 w-screen -mx-[50px] md:-mx-[90px] xl:-mx-[170px] pb-[80px] md:pb-[180px] xl:pb-[280px]">
-					<div className="absolute mx-auto w-fit text-center z-3 top-[20%] lg:top-[30%] right-0 left-0">
+				<div className="flex justify-center relative left-0 w-screen pb-[80px] md:pb-[180px] xl:pb-[280px]">
+					<div className="absolute mx-auto w-fit text-center z-3 top-[25%] md:top-[30%] right-0 left-0">
 						<h1 className="tracking-[3px] md:tracking-[4px] text-3xl md:text-5xl xl:text-6xl font-bold pb-[10px] md:pb-[20px] xl:pb-[80px] text-shadow-[0_2px_10px_var(--bg)]">Logo goes here</h1>
 						<p className="tracking-[2px] md:tracking-[4px] xl:tracking-[6px] text-md xl:text-lg font-extrabold text-shadow-[0_1px_5px_var(--bg)]">Optimized to every vertex</p>
 					</div>
@@ -50,58 +54,97 @@ export default function Home() {
 						src={images[0]}
 					/>
 				</div>
-				<div className="flex flex-col text-base">
-					<InfoBlock
-						title="What is Cterm3D?"
-						paragraph=<div>
-							<p>Cterm3D is a lightweight 3D modeling and rendering program, with an emphasis on performance and accessibility</p>
-						</div>
-						position="left"
-						windowWidth={windowWidth}
-						className="mb-[80px] xl:mb-[180px]"
-					/>
-					<InfoBlock
-						title="Performance"
-						paragraph=<ul className="list-disc">
-							<li className="pb-1">Cterm is made in C, which allows for very precise optimizations</li>
-							<li className="pb-1">lorem ipsum whtaefoewi</li>
-							<li className="">lorem ipsum whtaefoewi</li>
-						</ul>
-						position="right"
-						windowWidth={windowWidth}
-						className="mb-[40px] xl:mb-[80px]"
-					/>
-					<InfoBlock
-						title="Acessibility"
-						paragraph=<ul className="list-disc">
-							<li className="pb-1"></li>
-							<li className="pb-1">lorem ipsum whtaefoewi</li>
-							<li className="">lorem ipsum whtaefoewi</li>
-						</ul>
-						position="left"
-						windowWidth={windowWidth}
-						className="mb-[40px] xl:mb-[80px]"
-					/>
-					<InfoBlock
-						title="soomething super cool"
-						paragraph=<ul className="list-disc">
-							<li className="pb-1">Cterm is made in C, which allows for very precise optimizations</li>
-							<li className="pb-1">lorem ipsum whtaefoewi</li>
-							<li className="">lorem ipsum whtaefoewi</li>
-						</ul>
-						position="right"
-						windowWidth={windowWidth}
-						className="mb-[80px] xl:mb-[180px]"
-					/>
-					<a href="/cterm"><InfoBlock
-						title="Try it out!"
-						paragraph=<div>
-							<p>Click to go over to the <span className="text-(--accent3)">Cterm</span> page</p>
-						</div>
-						position="left"
-						windowWidth={windowWidth}
-						className=""
-					/></a>
+				<div className="relative flex flex-col text-base">
+					<div className="relative my-20 bg-(--bg-alt)">
+						<InfoBlock
+							title="What is Cterm3D?"
+							paragraph=<div>
+								<p>Cterm3D is a lightweight 3D modeling and rendering program, with an emphasis on performance and accessibility</p>
+								</div>
+							position="left"
+							windowWidth={windowWidth}
+							className="absolute top-[20%] z-10"
+						/>
+						<InfoBlock
+							title="Why"
+							paragraph=<ul className="list-disc">
+								<li className="pb-1">Cterm is made in C, which allows for very precise optimizations</li>
+								<li className="pb-1">lorem ipsum whtaefoewi</li>
+								<li className="">lorem ipsum whtaefoewi</li>
+							</ul>
+							position="right"
+							windowWidth={windowWidth}
+							className="absolute top-[50%] z-10"
+						/>
+						<img
+							src="/scene3.png"
+							className="clip-r blur-[1px] w-full"
+						/>
+				
+					</div>
+					<div className="relative my-20 bg-(--bg-alt) max-h-[1000px] overflow-hidden">
+						<InfoBlock
+							title="Performance"
+							paragraph=<ul className="list-disc">
+								<li className="pb-1">Cterm is made in C, which allows for very precise optimizations</li>
+								<li className="pb-1">lorem ipsum whtaefoewi</li>
+								<li className="">lorem ipsum whtaefoewi</li>
+							</ul>
+							position="right"
+							windowWidth={windowWidth}
+							className="absolute top-[10%] z-10"
+						/>
+						<InfoBlock
+							title="Acessibility"
+							paragraph=<ul className="list-disc">
+								<li className="pb-1"></li>
+								<li className="pb-1">lorem ipsum whtaefoewi</li>
+								<li className="">lorem ipsum whtaefoewi</li>
+							</ul>
+							position="left"
+							windowWidth={windowWidth}
+							className="absolute top-[40%] z-10"
+						/>
+						<InfoBlock
+							title="soomething super cool"
+							paragraph=<ul className="list-disc">
+								<li className="pb-1">Cterm is made in C, which allows for very precise optimizations</li>
+								<li className="pb-1">lorem ipsum whtaefoewi</li>
+								<li className="">lorem ipsum whtaefoewi</li>
+							</ul>
+							position="right"
+							windowWidth={windowWidth}
+							className="absolute top-[70%] z-10"
+						/>
+						<img
+							src="/scene2.png"
+							className="clip-c blur-[1px] w-[90%] md:w-[70%] xl:w-[50%] mx-auto"	
+						/>
+					</div>
+					<div className="relative my-20 bg-(--bg-alt)">
+						<a href="/cterm"><InfoBlock
+							title="Try it out!"
+							paragraph=<div>
+								<p>Click to go over to the <span className="text-(--accent3)">Cterm</span> page</p>
+							</div>
+							position="left"
+							windowWidth={windowWidth}
+							className="absolute z-10 top-[25%]"
+						/></a>
+						<a href="/info"><InfoBlock
+							title="Or read the documentation"
+							paragraph=<div>
+								<p>Click to go over to the <span className="text-(--accent3)">Info</span> page</p>
+							</div>
+							position="right"
+							windowWidth={windowWidth}
+							className="absolute z-10 top-[50%]"
+						/></a>
+						<img
+							src="/scene4.png"
+							className="clip-l blur-[1px] w-full"	
+						/>
+					</div>
 				</div>
 				<div className="h-[480px]">
 				</div>
@@ -117,24 +160,20 @@ function InfoBlock({
 	position,
 	className,
 }) {
-	const padding = windowWidth < 768
-		? 50 : windowWidth < 1280
-		? 90 : 170
-
 	const blockSize = windowWidth < 768
 		? 300
 		: 400
 
-	const a = padding + blockSize/2;
-	const b = padding + blockSize/4;
+	const a = blockSize/2;
+	const b = blockSize/4;
 
 	const offset = windowWidth < 768
 		? position == "left"
-			? windowWidth/2 - (padding + blockSize/2)
-			: windowWidth/2 - (padding + blockSize/2)
+			? windowWidth/2 - (blockSize/2)
+			: windowWidth/2 - (blockSize/2)
 		: position == "left"
-			? windowWidth/3 - (padding + blockSize/2)
-			: windowWidth/3 * 2 - (padding + blockSize/2)
+			? windowWidth/3 - (blockSize/2)
+			: windowWidth/3 * 2 - (blockSize/2)
 
 	const ref = useRef(null);
 	const { scrollY } = useScroll();
@@ -143,7 +182,6 @@ function InfoBlock({
   		offset: ["start end", "end start"]
 	});
 
-	console.log(title, scrollYProgress.current);
 	const scaleX = useSpring(scrollYProgress, {
 		stiffness: 100,
 		damping: 30,
@@ -151,14 +189,14 @@ function InfoBlock({
 	})
 	const o = useTransform(
 		scaleX,
-		[0, 0.25, 0.5],
+		[0, 0.125, 0.25],
 		[0, 0.6, 1]
 	);
 	const x = useTransform(
 		scaleX,
-		[0, 0.125, 0.25, 0.375, 0.5],
+		[0, 0.0675, 0.125, 0.1725, 0.25],
 		position == "left"
-		? [-padding, 0.5 * offset - padding * 0.5, 0.75 * offset - padding * 0.25, 0.9 * offset - padding * 0.1, offset]
+		? [0.0, 0.5 * offset, 0.75 * offset, 0.9 * offset, offset]
 		: [offset + a, offset + 0.5 * b, offset + 0.25 * b, offset + 0.1 * b, offset]
 	);
 	const [scrollDirection, setScrollDirection] = useState("down");
@@ -172,10 +210,10 @@ function InfoBlock({
 		<motion.div
 			whileHover={{ boxShadow: "0 2px 5px 1px var(--accent2)", translateY: "-10px"}}
 			ref={ref}
-			style={{ opacity: o, translateX: x }}
+			style={{ opacity: o, left: x }}
 
 			className={cn(
-				"relative flex flex-col gap-3 w-[300px] xl:w-[400px] p-4 rounded-2xl shadow-[0_2px_5px_1px_var(--accent1)]",
+				"relative flex flex-col gap-3 w-[300px] xl:w-[400px] p-4 rounded-2xl shadow-[0_2px_5px_1px_var(--accent1)] bg-(--bg)/50 backdrop-blur-lg",
 				className,
 			)}
 		>

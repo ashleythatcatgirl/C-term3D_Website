@@ -1,12 +1,19 @@
 import { useEffect, useState } from "react";
 import { Header } from "../components/Header.jsx";
 
+import { useWindowDimensions } from "../hooks/useWindowDimensions.js";
+
 export default function Info() {
+	const { width: windowWidth, height: windowHeight} = useWindowDimensions();
+	const [isMenuOpen, setIsMenuOpen] = useState();
 
 	return (
 		<div className='flex flex-col min-h-dvh min-w-dvw text-(--fg) bg-(--bg) text-sm'>
 			<Header
 				title="Info"
+				windowWidth={windowWidth}
+				isMenuOpen={isMenuOpen}
+				onOpen={setIsMenuOpen}
 			/>
 			<main className='flex flex-col px-[20px] md:px-[90px] xl:px-[170px] gap-[100px] py-[20px]'>
 				<div className='flex flex-col lg:flex-row w-full gap-[20px] px-[20px] md:px-[60px] xl:px-[100px] bg-(--bg) rounded-xl'>
