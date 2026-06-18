@@ -87,9 +87,9 @@ export default function Cterm() {
 				title="Library"
 			/>
 			<main className='flex flex-col px-[20px] md:px-[90px] xl:px-[170px]'>
-				<div className='flex flex-col px-[20px] md:px-[60px] xl:px-[100px] lg:flex-row py-[20px] rounded-xl'>
+				<div className='flex flex-col px-[40px] md:px-[120px] xl:px-[200px] lg:flex-row py-[20px] rounded-xl'>
 					<div className='flex flex-col w-full md:min-w-[61.8%] pr-2'>
-						<div className="border-b border-(--accent2) px-[100px] mb-[20px]">
+						<div className="border-b border-(--accent2) px-[20px] md:px-[60px] xl:px-[100px] mb-[20px]">
 							<h2 className="font-bold text-xl">Filter</h2>
 						</div>
 						<div className="flex flex-col gap-5 md:gap-3 sm:flex-row justify-between px-[20px]">
@@ -154,7 +154,7 @@ export default function Cterm() {
 					</div>
 				</div>
 				<div className='flex flex-col px-[20px] md:px-[60px] xl:px-[100px] rounded-xl'>
-					<div className='pt-[20px] px-[20px] md:px-[60px] xl:px-[100px] border-b-2 border-(--accent2) mb-[20px]'>
+					<div className='pt-[20px] px-[20px] md:px-[60px] xl:px-[100px] border-b border-(--accent1) mb-[20px]'>
 						<h2 className="font-bold text-xl tracking-wide">Asset library</h2>
 					</div>
 					<AssetList

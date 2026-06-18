@@ -125,7 +125,7 @@ export function Asset(
 		</motion.div>
 		) : (
 		<motion.div
-			className="overflow-y-scroll max-h-[500px] col-span-full rounded-xl p-2 md:p-5 lg:p-10 border md:border-2 border-(--accent1)"
+			className="overflow-y-scroll max-h-[500px] col-span-full rounded-xl p-2 md:p-5 lg:p-10 border md:border-2 border-(--accent2)"
 			transition={{
 				duration: 0.3, ease: "easeInOut",
 				opacity: { duration: 0.5 },
@@ -141,7 +141,7 @@ export function Asset(
 			<div className="flex justify-between pb-4">
 				<div className="flex flex-col sm:flex-row gap-1 md:gap-2">
 					<button
-						className="hover:bg-(--accent2) active:bg-(--accent3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 rounded-lg border-1 border-(--accent2)"
+						className="shadow-[0_1px_4px_0px_var(--accent1)] active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 rounded-lg"
                         			onClick={(e) => {
 							e.stopPropagation();
 							onFavorite(asset.name);
@@ -151,7 +151,7 @@ export function Asset(
 					</button>
 
 					<button
-						className="hover:bg-(--accent2) active:bg-(--accent3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 rounded-lg border-1 border-(--accent2)"
+						className="shadow-[0_1px_4px_0px_var(--accent1)] active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 rounded-lg"
                         			onClick={(e) => {
 							e.stopPropagation();
 							onDownload(asset);
@@ -163,7 +163,7 @@ export function Asset(
 				</div>
 				<div>
 					<button
-						className="hover:bg-(--accent2) active:bg-(--accent3) active:scale-110 duration-100 ease-in-out transition-all px-4 py-2 rounded-lg border-1 border-(--accent2)"
+						className="shadow-[0_1px_4px_0px_var(--accent1)] duration-100 ease-in-out transition-all px-4 py-2 rounded-lg active:scale-110 hover:scale-105 cursor-pointer"
 						onClick={(e) => {
 							e.stopPropagation();
 							onClose(null);
@@ -174,7 +174,7 @@ export function Asset(
 				</div>
 			</div>
 			<div className="flex flex-col md:flex-row">
-				<div className="flex flex-col md:border-r border-(--accent2) px-2 md:px-0 md:pr-8 w-full md:max-w-[50%]">
+				<div className="flex flex-col md:border-r border-(--accent1) px-2 md:px-0 md:pr-8 w-full md:max-w-[50%]">
 					<h1 className='font-bold text-2xl md:text-3xl'>{asset.name}</h1>
 					<div className="relative w-full md:w-[50%] lg:w-full">
 						<img
@@ -188,13 +188,13 @@ export function Asset(
 							}
 						</div>
 					</div>
-					<div className="pb-2 border-b md:pb-0 md:border-0 border-(--accent2)">
+					<div className="pb-2 border-b md:pb-0 md:border-0 border-(--accent1)">
 						<h2 className="font-bold text-lg pb-2">Description</h2>
 						<p className="text-justify">{asset.description}</p>
 					</div>
 				</div>
 				<div className="pl-2 md:pl-8">
-					<div className="pb-2 pt-5 md:pt-0 border-b border-(--accent2)">
+					<div className="pb-2 pt-5 md:pt-0 border-b border-(--accent1)">
 						<h2 className="font-bold text-lg pb-2">Authors</h2>
 						<div className="flex flex-wrap gap-x-2 gap-y-1">
 							<div className="flex flex-col">
@@ -208,13 +208,13 @@ export function Asset(
 						</div>
 
 					</div>
-					<div className="pb-2 pt-5 border-b border-(--accent2)">
+					<div className="pb-2 pt-5 border-b border-(--accent1)">
 						<h2 className="font-bold text-lg pb-2">Date published</h2>
 						<div className="flex">
 							<p>{Date(asset.date_published * 1000).replace(/\(.*\)/g, "")}</p>
 						</div>
 					</div>
-					<div className="pb-2 pt-5 border-b border-(--accent2)">
+					<div className="pb-2 pt-5 border-b border-(--accent1)">
 						<h2 className="font-bold text-lg pb-2">Categories</h2>
 						<div className="flex flex-wrap gap-x-2 gap-y-1">
 							{asset.categories.map((category) =>

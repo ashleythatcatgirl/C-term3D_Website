@@ -52,15 +52,15 @@ export default function Info() {
 								<div className="">
 									<h2 className="font-bold text-xl">Github</h2>
 								</div>
-								<div className="px-[20px]">
-									<p className="italic text-(--fg) hover:tracking-[2px] transition-all hover:text-(--accent1)">
+								<div className="px-[20px] pt-[20px]">
+									<p className="italic text-(--fg) hover:tracking-[2px] transition-all text-(--accent1) hover:text-(--accent3)">
 									<a href="https://github.com/ashleythatcatgirl/C-term3D_Website">
 										{'Website -->'}
 									</a>
 									</p>
 								</div>
-								<div className="px-[20px]">
-									<p className="italic text-(--fg) hover:tracking-[2px] transition-all hover:text-(--accent1)">
+								<div className="px-[20px] pt-[20px]">
+									<p className="italic text-(--fg) hover:tracking-[2px] transition-all text-(--accent1) hover:text-(--accent3)">
 									<a href="https://github.com/ashleythatcatgirl/C-term3D">
 										{'C-term3D -->'}
 									</a>

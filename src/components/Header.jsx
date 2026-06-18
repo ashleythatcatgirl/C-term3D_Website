@@ -39,7 +39,7 @@ export function Header({
 					page={title}
 					title="Cterm3D"
 					link="/cterm"
-					className="w-[80px] bg-(--accent2) active:bg-(--accent1) active:opacity-80"
+					className="w-[80px] bg-(--accent1) text-(--bg) active:opacity-80"
 				/>
 			</div>
 		</header>
@@ -69,7 +69,7 @@ function PageLink({
 						: "shadow-[0_1px_4px_0px_var(--accent2)]"
 					),
 					(upperTitle == upperPage && upperPage == "CTERM3D"
-						? "bg-(--accent1) text-(--bg)"
+						? "bg-(--accent2)"
 						: ""
 					),
 					`active:scale-110 hover:scale-105 duration-100 ease-in-out transition-all px-1 py-2 rounded-md cursor-pointer`

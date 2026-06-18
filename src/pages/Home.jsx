@@ -21,14 +21,14 @@ export default function Home() {
 			/>
 			<main className='flex flex-col px-[50px] md:px-[90px] xl:px-[170px]'>
 				<div className="pb-[80px] md:pb-[180px] xl:pb-[280px]">
-					<div className="relative left-0 w-screen -mx-[50px] md:-mx-[90px] lx:-mx-[170px]">
+					<div className="relative left-0 w-screen -mx-[50px] md:-mx-[90px] xl:-mx-[170px]">
 						<div className="absolute mx-auto w-fit text-center z-3 top-[40%] right-1 left-1">
 							<h1 className="tracking-[3px] md:tracking-[4px] text-3xl md:text-5xl xl:text-6xl font-bold pb-[10px] md:pb-[20px] xl:pb-[80px] text-shadow-[0_2px_10px_var(--bg)]">Logo goes here</h1>
 							<p className="tracking-[2px] md:tracking-[4px] xl:tracking-[6px] text-md xl:text-lg font-extrabold text-shadow-[0_1px_5px_var(--bg)]">Optimized to every vertex</p>
 						</div>
 						<div className="absolute bg-(--bg) opacity-50 w-full h-full z-2"></div>
 						<img
-							className="object-top z-1"
+							className="w-full z-1"
 							src={images[0]}
 						/>
 					</div>
@@ -79,7 +79,7 @@ export default function Home() {
 					<InfoBlock
 						title="Try it out!"
 						paragraph=<a href="/cterm"><div>
-							<p>Click to go over to the Cterm page</p>
+							<p>Click to go over to the <span className="text-(--accent3)">Cterm</span> page</p>
 						</div></a>
 						position="left"
 						windowWidth={windowWidth}
@@ -153,12 +153,12 @@ function InfoBlock({
 
 	return (
 		<motion.div
-			whileHover={{ boxShadow: "0 2px 5px 1px var(--accent1)", translateY: "-10px"}}
+			whileHover={{ boxShadow: "0 2px 5px 1px var(--accent2)", translateY: "-10px"}}
 			ref={ref}
 			style={{ opacity: o, translateX: x }}
 
 			className={cn(
-				"relative flex flex-col gap-3 w-[300px] xl:w-[400px] p-4 rounded-2xl shadow-[0_2px_5px_1px_var(--accent2)]",
+				"relative flex flex-col gap-3 w-[300px] xl:w-[400px] p-4 rounded-2xl shadow-[0_2px_5px_1px_var(--accent1)]",
 				className,
 			)}
 		>

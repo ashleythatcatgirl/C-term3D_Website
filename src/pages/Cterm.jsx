@@ -70,7 +70,7 @@ export default function Cterm() {
 							/>
 							: <div className="flex flex-col gap-1 items-center py-2 md:py-4">
 								<h1 className="text-(--fg)/75 text-md">no downloaded assets..</h1>
-								<h1 className="text-(--fg)/75 text-md">get some in the <a href="/library" className="text-(--accent2)">library</a></h1>
+								<h1 className="text-(--fg)/75 text-md">get some in the <a href="/library" className="text-(--accent3)">library</a></h1>
 							</div>
 						}
 					</div>
