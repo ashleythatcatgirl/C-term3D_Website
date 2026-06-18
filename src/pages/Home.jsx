@@ -44,13 +44,13 @@ export default function Home() {
 				</div>
 				*/}
 				<div className="flex justify-center relative left-0 w-screen pb-[80px] md:pb-[180px] xl:pb-[280px]">
-					<div className="absolute mx-auto w-fit text-center z-3 top-[25%] md:top-[30%] right-0 left-0">
-						<h1 className="tracking-[3px] md:tracking-[4px] text-3xl md:text-5xl xl:text-6xl font-bold pb-[10px] md:pb-[20px] xl:pb-[80px] text-shadow-[0_2px_10px_var(--bg)]">Logo goes here</h1>
+					<div className="absolute px-[15%] md:px-[20%] xl:px-[30%] w-full text-center z-3 top-[5%] md:top-[10%] xl:top-[15%] right-0 left-0">
+						<img src="/logodark.svg" className="w-full"/>
 						<p className="tracking-[2px] md:tracking-[4px] xl:tracking-[6px] text-md xl:text-lg font-extrabold text-shadow-[0_1px_5px_var(--bg)]">Optimized to every vertex</p>
 					</div>
 					<div className="absolute bg-(--bg) opacity-50 w-full h-full z-2"></div>
 					<img
-						className="w-full z-1"
+						className="z-1"
 						src={images[0]}
 					/>
 				</div>
