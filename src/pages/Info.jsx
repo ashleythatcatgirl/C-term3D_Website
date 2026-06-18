@@ -11,7 +11,7 @@ export default function Info() {
 			<main className='flex flex-col px-[20px] md:px-[90px] xl:px-[170px] gap-[100px] py-[20px]'>
 				<div className='flex flex-col lg:flex-row w-full gap-[20px] px-[20px] md:px-[60px] xl:px-[100px] bg-(--bg) rounded-xl'>
 					<div className="flex flex-col rounded-xl min-w-[50%] gap-[20px]">
-						<div className="px-[20px] md:px-[60px] xl:px-[100px] border-b-2 border-(--accent2)">
+						<div className="px-[20px] md:px-[60px] xl:px-[100px] border-b border-(--accent1)">
 							<h1 className='font-bold text-2xl'>About this webpage</h1>
 						</div>
 						<div className="flex flex-col gap-[20px]">
@@ -44,7 +44,7 @@ export default function Info() {
 						</div>
 					</div>
 					<div className="flex flex-col rounded-xl min-w-[50%] gap-[20px]">
-						<div className="flex px-[20px] md:px-[60px] xl:px-[100px] border-b-2 border-(--accent2)">
+						<div className="flex px-[20px] md:px-[60px] xl:px-[100px] border-b border-(--accent1)">
 							<h1 className='font-bold text-2xl '>Links</h1>
 						</div>
 						<div className="flex flex-col gap-[20px]">
@@ -77,7 +77,7 @@ export default function Info() {
 					</div>
 					<div className='flex flex-col lg:flex-row w-full gap-[20px] px-[20px] md:px-[60px] xl:px-[100px] py-[20px] bg-(--bg) rounded-xl'>
 						<div className="flex flex-col rounded-xl min-w-[50%] gap-[20px]">
-							<div className="px-[20px] md:px-[60px] xl:px-[100px] border-b-2 border-(--accent2)">
+							<div className="px-[20px] md:px-[60px] xl:px-[100px] border-b border-(--accent1)">
 								<h1 className='font-bold text-2xl'>Code</h1>
 							</div>
 							<div className="flex flex-col gap-[20px]">
@@ -119,7 +119,7 @@ export default function Info() {
 							</div>
 						</div>
 						<div className="flex flex-col rounded-xl min-w-[50%] gap-[20px]">
-							<div className="px-[20px] md:px-[60px] xl:px-[100px] border-b-2 border-(--accent2) right-0">
+							<div className="px-[20px] md:px-[60px] xl:px-[100px] border-b border-(--accent1) right-0">
 								<h1 className='font-bold text-2xl '>Other</h1>
 							</div>
 							<div className="flex flex-col gap-[20px]">

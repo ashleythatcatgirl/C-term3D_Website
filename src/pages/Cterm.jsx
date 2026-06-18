@@ -49,6 +49,8 @@ export default function Cterm() {
 						/>
 						<Renderer
 							imgRef={imgRef}
+							isOpen={isRendererOpen}
+							onClick={setIsRendererOpen}
 						/>
 					</div>
 					<div

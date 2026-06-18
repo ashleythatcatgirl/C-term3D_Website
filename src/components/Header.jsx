@@ -10,7 +10,7 @@ export function Header({
 }) {
 
 	return(
-		<header className='flex px-[20px] md:px-[90px] xl:px-[170px] py-[10px] rounded-b-sm justify-between items-center bg-(--bg-alt) border-b border-(--accent1)'>
+		<header className='flex px-[20px] md:px-[90px] xl:px-[170px] py-[10px] rounded-b-sm justify-between items-center bg-(--bg-alt) border-b border-(--accent2)'>
 			<Title
 				title={title}
 				classNameDiv="py-2 w-[280px]"
@@ -65,8 +65,8 @@ function PageLink({
 				className={cn(
 					className,
 					(upperTitle == upperPage
-						? "shadow-[0_2px_4px_0px_var(--accent1)]"
-						: "shadow-[0_1px_4px_0px_var(--accent2)]"
+						? "shadow-[0_2px_4px_0px_var(--accent2)]"
+						: "shadow-[0_1px_4px_0px_var(--accent1)]"
 					),
 					(upperTitle == upperPage && upperPage == "CTERM3D"
 						? "bg-(--accent2)"

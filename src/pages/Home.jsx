@@ -20,18 +20,35 @@ export default function Home() {
 				title="Home"
 			/>
 			<main className='flex flex-col px-[50px] md:px-[90px] xl:px-[170px]'>
-				<div className="pb-[80px] md:pb-[180px] xl:pb-[280px]">
-					<div className="relative left-0 w-screen -mx-[50px] md:-mx-[90px] xl:-mx-[170px]">
-						<div className="absolute mx-auto w-fit text-center z-3 top-[40%] right-1 left-1">
-							<h1 className="tracking-[3px] md:tracking-[4px] text-3xl md:text-5xl xl:text-6xl font-bold pb-[10px] md:pb-[20px] xl:pb-[80px] text-shadow-[0_2px_10px_var(--bg)]">Logo goes here</h1>
-							<p className="tracking-[2px] md:tracking-[4px] xl:tracking-[6px] text-md xl:text-lg font-extrabold text-shadow-[0_1px_5px_var(--bg)]">Optimized to every vertex</p>
-						</div>
-						<div className="absolute bg-(--bg) opacity-50 w-full h-full z-2"></div>
-						<img
-							className="w-full z-1"
-							src={images[0]}
-						/>
+				{/*
+				<div className="flex justify-center absolute left-0 right-0 top-0 bottom-0 h-screen mx-auto my-auto bg-black">
+					<div className="absolute right-[20px] md:right-[40px] xl:right-[80px] flex gap-10 justify-end text-xl w-min py-2 px-[20px]">
+						<button
+							className="bg-(--bg-alt) px-[20px] py-2 active:scale-110 hover:scale-105 duration-100 ease-in-out transition-all rounded-md cursor-pointer"
+							onClick={(e) => {
+								e.stopPropagation();
+								onClick(!isOpen);
+							}}
+						>
+							Close
+						</button>
 					</div>
+					<img
+						className="my-auto w-screen 2xl:h-screen xl:w-auto xl:mx-auto"
+						src={images[1]}
+					/>
+				</div>
+				*/}
+				<div className="flex justify-center relative left-0 w-screen -mx-[50px] md:-mx-[90px] xl:-mx-[170px] pb-[80px] md:pb-[180px] xl:pb-[280px]">
+					<div className="absolute mx-auto w-fit text-center z-3 top-[20%] lg:top-[30%] right-0 left-0">
+						<h1 className="tracking-[3px] md:tracking-[4px] text-3xl md:text-5xl xl:text-6xl font-bold pb-[10px] md:pb-[20px] xl:pb-[80px] text-shadow-[0_2px_10px_var(--bg)]">Logo goes here</h1>
+						<p className="tracking-[2px] md:tracking-[4px] xl:tracking-[6px] text-md xl:text-lg font-extrabold text-shadow-[0_1px_5px_var(--bg)]">Optimized to every vertex</p>
+					</div>
+					<div className="absolute bg-(--bg) opacity-50 w-full h-full z-2"></div>
+					<img
+						className="w-full z-1"
+						src={images[0]}
+					/>
 				</div>
 				<div className="flex flex-col text-base">
 					<InfoBlock
@@ -76,17 +93,17 @@ export default function Home() {
 						windowWidth={windowWidth}
 						className="mb-[80px] xl:mb-[180px]"
 					/>
-					<InfoBlock
+					<a href="/cterm"><InfoBlock
 						title="Try it out!"
-						paragraph=<a href="/cterm"><div>
+						paragraph=<div>
 							<p>Click to go over to the <span className="text-(--accent3)">Cterm</span> page</p>
-						</div></a>
+						</div>
 						position="left"
 						windowWidth={windowWidth}
 						className=""
-					/>
+					/></a>
 				</div>
-				<div className="h-[380px]">
+				<div className="h-[480px]">
 				</div>
 			</main>
 		</div>

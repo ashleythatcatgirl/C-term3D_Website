@@ -89,14 +89,14 @@ export default function Cterm() {
 			<main className='flex flex-col px-[20px] md:px-[90px] xl:px-[170px]'>
 				<div className='flex flex-col px-[40px] md:px-[120px] xl:px-[200px] lg:flex-row py-[20px] rounded-xl'>
 					<div className='flex flex-col w-full md:min-w-[61.8%] pr-2'>
-						<div className="border-b border-(--accent2) px-[20px] md:px-[60px] xl:px-[100px] mb-[20px]">
+						<div className="border-b border-(--accent1) px-[20px] md:px-[60px] xl:px-[100px] mb-[20px]">
 							<h2 className="font-bold text-xl">Filter</h2>
 						</div>
 						<div className="flex flex-col gap-5 md:gap-3 sm:flex-row justify-between px-[20px]">
 							<div className="flex gap-5 items-center">
 								<h2 className="font-bold text-base lg:text-md">Type</h2>
 								<select
-									className="w-full p-2 text-(--fg)/75 border border-(--fg)/10 hover:bg-(--bg-alt) focus:border-(--accent1) rounded-lg"
+									className="w-full p-2 text-(--fg)/75 border border-(--fg)/10 hover:bg-(--bg-alt) focus:border-(--accent2) rounded-lg"
 									value={filterType ? filterType : 'all'}
                                 					onChange={(e) => handleFilterType(e.target.value)}
 								>
@@ -114,7 +114,7 @@ export default function Cterm() {
 							<div className="flex gap-5 items-center">
 								<h2 className="font-bold text-base lg:text-md">Category</h2>
 								<select
-									className="w-full p-2 text-(--fg)/75 border border-(--fg)/10 hover:bg-(--bg-alt) focus:border-(--accent1) rounded-lg disabled:cursor-default"
+									className="w-full p-2 text-(--fg)/75 border border-(--fg)/10 hover:bg-(--bg-alt) focus:border-(--accent2) rounded-lg disabled:cursor-default"
 									value={filterCategory ? filterCategory : 'all'}
                                 					onChange={(e) => handleFilterCategory(e.target.value)}
 									disabled={filterType ? false : true}
@@ -131,7 +131,7 @@ export default function Cterm() {
 							<div className="flex gap-5 items-center">
 								<h2 className="font-bold text-base lg:text-md">Tags</h2>
 								<select
-									className="w-full p-2 text-(--fg)/75 border border-(--fg)/10 hover:bg-(--bg-alt) focus:border-(--accent1) rounded-lg disabled:cursor-default"
+									className="w-full p-2 text-(--fg)/75 border border-(--fg)/10 hover:bg-(--bg-alt) focus:border-(--accent2) rounded-lg disabled:cursor-default"
 									disabled={true}
 								>
 									<option value='all'>all</option>
@@ -142,19 +142,19 @@ export default function Cterm() {
 					<div className='flex flex-col w-full pl-2'>
 						<Title
 							title="Search"
-							classNameDiv="border-b border-(--accent2) px-[100px] mb-[20px]"
+							classNameDiv="border-b border-(--accent1) px-[100px] mb-[20px]"
 						/>
 						<div className="px-[20px]">
 							<input
                                					value={search}
 				                                onChange={(e) => setSearch(e.target.value)}
-								className="outline-0 hover:bg-(--bg-alt) border border-(--fg)/10 focus:border-(--accent1) w-full p-2 rounded-lg"
+								className="outline-0 hover:bg-(--bg-alt) border border-(--fg)/10 focus:border-(--accent2) w-full p-2 rounded-lg"
 							/>
 						</div>
 					</div>
 				</div>
 				<div className='flex flex-col px-[20px] md:px-[60px] xl:px-[100px] rounded-xl'>
-					<div className='pt-[20px] px-[20px] md:px-[60px] xl:px-[100px] border-b border-(--accent1) mb-[20px]'>
+					<div className='pt-[20px] px-[20px] md:px-[60px] xl:px-[100px] border-b border-(--accent2) mb-[20px]'>
 						<h2 className="font-bold text-xl tracking-wide">Asset library</h2>
 					</div>
 					<AssetList
