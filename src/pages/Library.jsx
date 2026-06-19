@@ -52,8 +52,6 @@ export default function Cterm() {
 	const handleDownloadAsset = (asset) => {
 		const newDownloads = [...downloadedAssets, asset];
 
-		console.log(newDownloads);
-
 		toast.info("Downloading asset");
 
 		setDownloadedAssets(newDownloads);

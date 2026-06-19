@@ -12,8 +12,6 @@ export function Header({
 	onOpen,
 }) {
 
-	console.log(windowWidth);
-	
 	return(
 		<header className='flex px-[20px] md:px-[90px] xl:px-[170px] py-[10px] rounded-b-sm justify-between items-center bg-(--bg-alt) border-b border-(--accent2)'>
 			<Title
@@ -40,9 +38,16 @@ export function Header({
 				</div>
 				: null
 			}
+			<AnimatePresence>
 			{isMenuOpen || windowWidth > 768
 				?
-			<div className='absolute md:static px-[10px] py-[10px] rounded-md right-[10px] top-[70px] flex flex-col bg-(--bg-alt)/50 w-min md:flex-row gap-[20px] py-2 justify-end z-10'>
+			<motion.div
+				initial={{ opacity: 0, translateY: -200 }}
+				animate={{ opacity: 1, translateY: 0 }}
+				exit={{ opacity: 0, translateY: -200 }}
+				transition={{ ease: "easeInOut", duration: 0.2 }}
+				className='absolute md:static px-[10px] py-[10px] rounded-md right-[10px] top-[70px] flex flex-col bg-(--bg-alt)/50 w-min md:flex-row gap-[20px] py-2 justify-end z-10'
+			>
 				<PageLink
 					page={title}
 					title="Home"
@@ -67,9 +72,10 @@ export function Header({
 					link="/cterm"
 					className="w-[80px] bg-(--accent1) text-(--bg) active:opacity-80"
 				/>
-			</div>
+			</motion.div>
 				: null
 			}
+			</AnimatePresence>
 		</header>
 	);
 }

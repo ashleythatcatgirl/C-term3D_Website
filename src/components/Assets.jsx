@@ -86,8 +86,8 @@ export function Asset(
 		{!isSelected
 		? (
 		<motion.div
-			initial={{ opacity: 0.1, translateY: 0 }}
-			whileInView={{ opacity: 1.0, translateY: scrollDirection == "down" ? -10 : 10 }}
+			initial={{ opacity: 0.1, translateY: theThingYknow ? null : scrollDirection == "down" ? -20 : 20 }}
+			whileInView={{ opacity: 1.0, translateY: 0 }}
 			whileHover={{ background: "var(--bg)", boxShadow: "0 0 2px 2px var(--accent1) inset" }}
 			transition={{
 				opacity: { duration: theThingYknow ? 0.2 : 0.5 },
