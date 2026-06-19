@@ -11,7 +11,7 @@ export function Renderer({
 		<div className="">
 			{isOpen
 				?
-				<div className="flex justify-center absolute left-0 right-0 top-0 bottom-0 h-screen mx-auto my-auto bg-black">
+				<div className="flex justify-center absolute left-0 right-0 top-0 bottom-0 h-screen mx-auto my-auto bg-black z-100">
 					<div className="absolute right-[20px] md:right-[40px] xl:right-[80px] flex gap-10 justify-end text-xl w-min py-2 px-[20px]">
 						<button
 							className="bg-(--bg-alt) px-[20px] py-2 active:scale-110 hover:scale-105 duration-100 ease-in-out transition-all rounded-md cursor-pointer shadow-[0_1px_4px_0px_var(--accent1)]"

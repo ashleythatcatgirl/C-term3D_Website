@@ -42,7 +42,7 @@ export function Header({
 			}
 			{isMenuOpen || windowWidth > 768
 				?
-			<div className='absolute md:static px-[10px] py-[10px] rounded-md right-[10px] top-[70px] flex flex-col bg-(--bg-alt) w-min md:flex-row gap-[20px] py-2 justify-end z-10'>
+			<div className='absolute md:static px-[10px] py-[10px] rounded-md right-[10px] top-[70px] flex flex-col bg-(--bg-alt)/50 w-min md:flex-row gap-[20px] py-2 justify-end z-10'>
 				<PageLink
 					page={title}
 					title="Home"

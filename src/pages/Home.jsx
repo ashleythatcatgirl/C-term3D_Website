@@ -24,38 +24,19 @@ export default function Home() {
 				onOpen={setIsMenuOpen}
 			/>
 			<main className='flex flex-col'>
-				{/*
-				<div className="flex justify-center absolute left-0 right-0 top-0 bottom-0 h-screen mx-auto my-auto bg-black">
-					<div className="absolute right-[20px] md:right-[40px] xl:right-[80px] flex gap-10 justify-end text-xl w-min py-2 px-[20px]">
-						<button
-							className="bg-(--bg-alt) px-[20px] py-2 active:scale-110 hover:scale-105 duration-100 ease-in-out transition-all rounded-md cursor-pointer"
-							onClick={(e) => {
-								e.stopPropagation();
-								onClick(!isOpen);
-							}}
-						>
-							Close
-						</button>
-					</div>
-					<img
-						className="my-auto w-screen 2xl:h-screen xl:w-auto xl:mx-auto"
-						src={images[1]}
-					/>
-				</div>
-				*/}
-				<div className="flex justify-center relative left-0 w-screen pb-[80px] md:pb-[180px] xl:pb-[280px]">
-					<div className="absolute px-[15%] md:px-[20%] xl:px-[30%] w-full text-center z-3 top-[5%] md:top-[10%] xl:top-[15%] right-0 left-0">
-						<img src="/logodark.svg" className="w-full"/>
+				<div className="flex justify-center relative pb-[80px] md:pb-[180px] xl:pb-[280px] w-[150%] -mx-[25%] xl:-mx-0 xl:w-full">
+					<div className="absolute px-[15%] md:px-[20%] xl:px-[30%] w-full text-center z-3 top-[15%] md:top-[20%] xl:top-[15%] right-0 left-0">
+						<img src="/logodark.svg" className="w-[50%] xl:w-full mx-auto"/>
 						<p className="tracking-[2px] md:tracking-[4px] xl:tracking-[6px] text-md xl:text-lg font-extrabold text-shadow-[0_1px_5px_var(--bg)]">Optimized to every vertex</p>
 					</div>
-					<div className="absolute bg-(--bg) opacity-50 w-full h-full z-2"></div>
+					<div className="absolute bg-(--bg) opacity-65 w-full h-full z-2"></div>
 					<img
-						className="z-1"
+						className="z-1 w-full"
 						src={images[0]}
 					/>
 				</div>
-				<div className="relative flex flex-col text-base">
-					<div className="relative my-20 bg-(--bg-alt)">
+				<div className="flex flex-col text-base">
+					<div className="relative my-20 bg-(--bg-alt) w-[300%] sm:w-[200%] md:w-[150%] xl:w-[100%] overflow-hidden">
 						<InfoBlock
 							title="What is Cterm3D?"
 							paragraph=<div>
@@ -63,7 +44,7 @@ export default function Home() {
 								</div>
 							position="left"
 							windowWidth={windowWidth}
-							className="absolute top-[20%] z-10"
+							className="absolute top-[5%] sm:top-[10%] xl:top-[20%] z-10"
 						/>
 						<InfoBlock
 							title="Why"
@@ -74,15 +55,15 @@ export default function Home() {
 							</ul>
 							position="right"
 							windowWidth={windowWidth}
-							className="absolute top-[50%] z-10"
+							className="absolute top-[55%] xl:top-[50%] z-10"
 						/>
 						<img
 							src="/scene3.png"
-							className="clip-r blur-[1px] w-full"
+							className="clip-r blur-[1px] -ml-[15%] md:-ml-[10%] xl:-ml-0 w-full"
 						/>
 				
 					</div>
-					<div className="relative my-20 bg-(--bg-alt) max-h-[1000px] overflow-hidden">
+					<div className="relative my-20 bg-(--bg-alt) w-[150%] sm:w-[120%] md:w-[110%] xl:w-[100%] overflow-hidden">
 						<InfoBlock
 							title="Performance"
 							paragraph=<ul className="list-disc">
@@ -92,7 +73,7 @@ export default function Home() {
 							</ul>
 							position="right"
 							windowWidth={windowWidth}
-							className="absolute top-[10%] z-10"
+							className="absolute top-[5%] md:top-[10%] z-10"
 						/>
 						<InfoBlock
 							title="Acessibility"
@@ -103,7 +84,7 @@ export default function Home() {
 							</ul>
 							position="left"
 							windowWidth={windowWidth}
-							className="absolute top-[40%] z-10"
+							className="absolute top-[38%] md:top-[44%] z-10"
 						/>
 						<InfoBlock
 							title="soomething super cool"
@@ -114,14 +95,14 @@ export default function Home() {
 							</ul>
 							position="right"
 							windowWidth={windowWidth}
-							className="absolute top-[70%] z-10"
+							className="absolute top-[65%] md:top-[70%] z-10"
 						/>
 						<img
 							src="/scene2.png"
-							className="clip-c blur-[1px] w-[90%] md:w-[70%] xl:w-[50%] mx-auto"	
+							className="clip-c blur-[1px] w-[100%] md:w-[70%] xl:w-[50%] mx-auto"	
 						/>
 					</div>
-					<div className="relative my-20 bg-(--bg-alt)">
+					<div className="relative my-20 bg-(--bg-alt) w-[300%] sm:w-[200%] md:w-[150%] xl:w-[100%] overflow-hidden">
 						<a href="/cterm"><InfoBlock
 							title="Try it out!"
 							paragraph=<div>
@@ -129,7 +110,7 @@ export default function Home() {
 							</div>
 							position="left"
 							windowWidth={windowWidth}
-							className="absolute z-10 top-[25%]"
+							className="absolute z-10 top-[10%] xl:top-[25%]"
 						/></a>
 						<a href="/info"><InfoBlock
 							title="Or read the documentation"
@@ -138,11 +119,11 @@ export default function Home() {
 							</div>
 							position="right"
 							windowWidth={windowWidth}
-							className="absolute z-10 top-[50%]"
+							className="absolute z-10 top-[60%] top-[50%]"
 						/></a>
 						<img
 							src="/scene4.png"
-							className="clip-l blur-[1px] w-full"	
+							className="clip-l blur-[1px] -mx-[50%] md:-mx-[20%] xl:-mx-0 w-full"	
 						/>
 					</div>
 				</div>
