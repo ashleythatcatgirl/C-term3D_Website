@@ -131,9 +131,9 @@ export function Asset(
 				opacity: { duration: 0.5 },
 				translateY: { duration: 0.5 },
 			}}
-			whileInView={{ opacity: 1.0, translateY: scrollDirection == "down" ? -10 : 10 }}
+			whileInView={{ opacity: 1.0, translateY: 0 }}
 			onLostPointerCaptureCaptu
-			initial={{ opacity: 0, scale: 0, translateY: 0 }}
+			initial={{ opacity: 0, scale: 0, translateY: scrollDirection == "down" ? -20 : 20 }}
                         animate={{ opacity: 1.0, scale: 1 }}
                         exit={{ opacity: 0, scale: 0 }}
 			key="box"

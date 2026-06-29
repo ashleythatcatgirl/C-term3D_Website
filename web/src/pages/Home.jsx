@@ -1,5 +1,5 @@
-import { useEffect, useState, useRef } from "react";
-import { motion, AnimatePresence, useScroll, useMotionValueEvent, useTransform, useSpring } from "motion/react"
+import { useState, useRef } from "react";
+import { motion, useScroll, useMotionValueEvent, useTransform, useSpring } from "motion/react"
 import { cn } from "../lib/utils.js";
 
 import { Header } from "../components/Header.jsx";

@@ -1,24 +1,20 @@
-import { useEffect, useState, useRef } from "react";
-import { normalize, setLocalStorage, setSessionStorage, checkAsset } from "../lib/utils.js";
-import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "motion/react"
+import { useState } from "react";
+import { setSessionStorage } from "../lib/utils.js";
 
 import { toast } from "sonner";
 import { Header } from "../components/Header.jsx";
 import { Title } from "../components/Title.jsx";
 import { Renderer } from "../components/Renderer.jsx";
-import { AssetList, Asset } from "../components/Assets.jsx";
+import { AssetList } from "../components/Assets.jsx";
 
 import { useWindowDimensions } from "../hooks/useWindowDimensions.js";
 import { useImgHeight } from "../hooks/useImgHeight.js";
-import { useAssets } from "../hooks/useAssets.js";
 
 export default function Cterm() {
 	const { width: windowWidth, height: windowHeight} = useWindowDimensions();
 	const { imgRef, imgHeight } = useImgHeight();
 
-	const initFavorites = JSON.parse(localStorage.getItem('favoriteAssets'));
 	const initDownloads = JSON.parse(sessionStorage.getItem('downloadedAssets'));
-	const [favoriteAssets, setFavoriteAssets] = useState(initFavorites ? initFavorites : []);
 	const [downloadedAssets, setDownloadedAssets] = useState(initDownloads ? initDownloads : []);
 
 	const [isRendererOpen, setIsRendererOpen] = useState();

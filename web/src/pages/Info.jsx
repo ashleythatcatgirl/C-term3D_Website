@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Header } from "../components/Header.jsx";
 
 import { useWindowDimensions } from "../hooks/useWindowDimensions.js";
