@@ -1,1 +1,1 @@
-if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/%7BCterm-3D-website%7D/sw.js', { scope: '/%7BCterm-3D-website%7D/' })})}
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/Cterm-3D-website/sw.js', { scope: '/Cterm-3D-website/' })})}
