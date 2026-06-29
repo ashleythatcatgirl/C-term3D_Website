@@ -1,6 +1,6 @@
-# C-term3D_Website
+# Cterm-3D-Website
 
-A website implementation of my C program [C-term3D](https://github.com/ashleythatcatgirl/C-term3D)
+A website implementation of my C program [Cterm-3D](https://github.com/ashleythatcatgirl/Cterm-3D)
 
 # Description
 
